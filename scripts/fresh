@@ -1,0 +1,4 @@
+#!/bin/bash
+composer dump-autoload
+php artisan migrate:fresh --seed
+# php artisan jwt:secret
