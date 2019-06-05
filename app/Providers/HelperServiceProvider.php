@@ -13,10 +13,11 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $path = base_path('/app/Helpers');
+        $path = base_path('app/Helpers');
         $helpers = [
             'HumanizeDateHelper',
             'JsonResponseHelper',
+            'RequestGetArrayHelper',
             'StatusHelper',
         ];
 

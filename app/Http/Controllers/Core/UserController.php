@@ -30,4 +30,15 @@ class UserController extends Controller
         $user = new UserResource($user);
         return jresponse($user);
     }
+
+    public function store(Request $request)
+    {
+        $user = User::makeMe($request);
+        if (!$user) {
+            return jresponse('Unable to create account.', 422);
+        }
+
+        $user = new UserResource($user);
+        return jresponse($user);
+    }
 }
