@@ -15,6 +15,7 @@ class HelperServiceProvider extends ServiceProvider
     {
         $path = base_path('app/Helpers');
         $helpers = [
+            'AuthUserHelper',
             'HumanizeDateHelper',
             'JsonResponseHelper',
             'RequestGetArrayHelper',

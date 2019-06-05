@@ -21,6 +21,7 @@ class Handler extends ExceptionHandler
         HttpException::class,
         ModelNotFoundException::class,
         ValidationException::class,
+        NotAuthException::class,
     ];
 
     /**
@@ -45,6 +46,22 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // check for NotAuthException
+        if ($exception instanceof NotAuthException) {
+            return jresponse('You must be logged in first.', 401);
+        } else if ($exception instanceof ValidationException) {
+            // only return the first message ;)
+            $errors = $exception->validator->getMessageBag()->toArray();
+            $eMsg = $exception->getMessage();
+            $values = array_values($errors);
+
+            // get string message only
+            $res = $values[0] ?? $exception->getMessage();
+            $res = is_array($res) ? $res[0] ?? $res : $res;
+
+            return jresponse($res, $exception->status);
+        }
+
         return parent::render($request, $exception);
     }
 }

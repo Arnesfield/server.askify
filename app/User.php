@@ -7,6 +7,7 @@ use App\Traits\FileUploadable;
 use App\Traits\Respondable;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
@@ -58,6 +59,11 @@ class User extends Model implements Makeable, AuthenticatableContract, Authoriza
     ];
 
     // methods
+
+    public function checkPassword($password)
+    {
+        return Hash::check($password, $this->password);
+    }
 
     // relationships
 
