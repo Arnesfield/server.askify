@@ -12,6 +12,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) use ($now) {
         'lname' => $faker->lastName,
         'email' => $faker->unique()->safeEmail,
         'password' => 'secret',
+        'email_verification_code' => '',
         'email_verified_at' => $now,
     ];
 });

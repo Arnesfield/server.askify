@@ -24,6 +24,7 @@ class User extends Model
 
     protected $fillable = [
         'fname', 'mname', 'lname', 'email', 'avatar', 'password',
+        'email_verification_code',
         'email_verified_at', 'deleted_at',
     ];
 
@@ -42,6 +43,7 @@ class User extends Model
 		'email' => '',
 		'avatar' => null,
 		'password' => '',
+        'email_verification_code' => '',
         'email_verified_at' => null,
 		'deleted_at' => null,
     ];
@@ -72,6 +74,11 @@ class User extends Model
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function setEmailVerificationCodeAttribute($value)
+    {
+        $this->attributes['email_verification_code'] = $value ?: str_random();
     }
 
     // relationships
