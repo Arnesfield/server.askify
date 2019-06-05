@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Interfaces\Makeable;
+use App\Interfaces\Validateable;
 use App\Traits\FileUploadable;
 use App\Traits\Respondable;
 
@@ -15,9 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class User extends Model implements Makeable, AuthenticatableContract, AuthorizableContract
+class User extends Model
+    implements Makeable, Validateable, AuthenticatableContract, AuthorizableContract
 {
-    use Respondable, FileUploadable;
+    use FileUploadable, Respondable;
     use SoftDeletes, Authenticatable, Authorizable;
 
     protected $fillable = [
@@ -65,6 +67,13 @@ class User extends Model implements Makeable, AuthenticatableContract, Authoriza
         return Hash::check($password, $this->password);
     }
 
+    // mutators
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
+
     // relationships
 
     public function roles()
@@ -95,5 +104,39 @@ class User extends Model implements Makeable, AuthenticatableContract, Authoriza
         $me->uploadImage($request, 'avatar');
 
         return $me;
+    }
+
+    protected static $validationErrors = [
+        'fname.required' => 'First name is required.',
+        'lname.required' => 'Last name is required.',
+        'email.required' => 'Email is required.',
+        'email.email' => 'The email must be a valid email address.',
+        'email.unique' => 'The email has already been taken.',
+
+        'old_password.required_with' => 'Please enter your old password.',
+        'password.required_with' => 'Password is required.',
+        'password.min' => 'Password should be at least 6 characters or above.',
+        'passconf.required_with' => 'Please confirm your password.',
+        'passconf.same' => 'Passwords should be the same.',
+    ];
+
+    // Validateable
+    public static function getValidationRules($id = null)
+    {
+        $idCond = $id ? ",$id" : '';
+
+        return [
+            'rules' => [
+                'fname' => 'sometimes|required',
+                'mname' => 'sometimes',
+                'lname' => 'sometimes|required',
+                'email' => 'sometimes|required|email|unique:users,email' . $idCond,
+
+                'old_password' => 'sometimes|required_with:password',
+                'password' => 'required_with:passconf,old_password|min:6',
+                'passconf' => 'sometimes|required_with:password|same:password',
+            ],
+            'errors' => static::$validationErrors
+        ];
     }
 }

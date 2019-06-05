@@ -33,6 +33,9 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        $R = User::getValidationRules();
+        $this->validate($request, $R['rules'], $R['errors']);
+
         $user = User::makeMe($request);
         return $user
             ? User::rmsg('create success')
@@ -45,6 +48,9 @@ class UserController extends Controller
         if (!$user) {
             return User::rmsg('not found', status($user));
         }
+        
+        $R = User::getValidationRules($id);
+        $this->validate($request, $R['rules'], $R['errors']);
 
         User::makeMe($request, $user);
         return User::rmsg('update success');
