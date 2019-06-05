@@ -4,6 +4,7 @@ namespace App;
 
 use App\Interfaces\Makeable;
 use App\Traits\FileUploadable;
+use App\Traits\Respondable;
 
 use Illuminate\Http\Request;
 use Illuminate\Auth\Authenticatable;
@@ -15,7 +16,8 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
 class User extends Model implements Makeable, AuthenticatableContract, AuthorizableContract
 {
-    use FileUploadable, SoftDeletes, Authenticatable, Authorizable;
+    use Respondable, FileUploadable;
+    use SoftDeletes, Authenticatable, Authorizable;
 
     protected $fillable = [
         'fname', 'mname', 'lname', 'email', 'avatar', 'password',
@@ -39,6 +41,20 @@ class User extends Model implements Makeable, AuthenticatableContract, Authoriza
 		'password' => '',
         'email_verified_at' => null,
 		'deleted_at' => null,
+    ];
+
+    protected static $responseMessages = [
+        'not found' => 'Account not found.',
+
+        'create success' => 'Account created.',
+        'update success' => 'Account updated.',
+        'delete success' => 'Account deleted.',
+        'restore success' => 'Account restored.',
+
+        'create fail' => 'Unable to create account.',
+        'update fail' => 'Unable to update account.',
+        'delete fail' => 'Unable to delete account.',
+        'restore fail' => 'Unable to restore account.',
     ];
 
     // methods

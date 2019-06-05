@@ -21,4 +21,5 @@ $router->group(['prefix' => 'users'], function() use ($router) {
     $router->get('/{id}', 'Core\UserController@show');
     $router->patch('/{id}', 'Core\UserController@update');
     $router->delete('/{id}', 'Core\UserController@destroy');
+    $router->patch('/{id}/restore', 'Core\UserController@restore');
 });
