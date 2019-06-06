@@ -115,6 +115,11 @@ class User extends Model
         return $this->belongsToMany(Role::class, 'user_roles');
     }
 
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
     // override
 
     // Makeable

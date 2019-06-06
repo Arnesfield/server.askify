@@ -31,3 +31,13 @@ $router->group(['prefix' => 'users'], function() use ($router) {
     $router->delete('{id}', 'Core\UserController@destroy');
     $router->patch('{id}/restore', 'Core\UserController@restore');
 });
+
+// questions
+$router->group(['prefix' => 'questions'], function() use ($router) {
+    $router->get('', 'Core\QuestionController@index');
+    $router->post('', 'Core\QuestionController@store');
+    $router->get('{id}', 'Core\QuestionController@show');
+    $router->patch('{id}', 'Core\QuestionController@update');
+    $router->delete('{id}', 'Core\QuestionController@destroy');
+    $router->patch('{id}/restore', 'Core\QuestionController@restore');
+});
