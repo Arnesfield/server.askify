@@ -19,14 +19,15 @@ $router->group(['prefix' => 'auth'], function() use ($router) {
     $router->post('login', 'Auth\LoginController@index');
     $router->get('me', 'Auth\MeController@index');
     $router->post('register', 'Auth\RegisterController@index');
+    $router->get('verify', 'Auth\VerifyEmailController@index');
 });
 
 // users
 $router->group(['prefix' => 'users'], function() use ($router) {
-    $router->get('/', 'Core\UserController@index');
-    $router->post('/', 'Core\UserController@store');
-    $router->get('/{id}', 'Core\UserController@show');
-    $router->patch('/{id}', 'Core\UserController@update');
-    $router->delete('/{id}', 'Core\UserController@destroy');
-    $router->patch('/{id}/restore', 'Core\UserController@restore');
+    $router->get('', 'Core\UserController@index');
+    $router->post('', 'Core\UserController@store');
+    $router->get('{id}', 'Core\UserController@show');
+    $router->patch('{id}', 'Core\UserController@update');
+    $router->delete('{id}', 'Core\UserController@destroy');
+    $router->patch('{id}/restore', 'Core\UserController@restore');
 });

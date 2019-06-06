@@ -69,6 +69,12 @@ class User extends Model
         return Hash::check($password, $this->password);
     }
 
+    public function verifyEmail($verify = true)
+    {
+        $d = $verify ? nowDt() : null;
+        return $this->update(['email_verified_at' => $d]);
+    }
+
     // mutators
 
     public function setPasswordAttribute($value)
@@ -79,6 +85,13 @@ class User extends Model
     public function setEmailVerificationCodeAttribute($value)
     {
         $this->attributes['email_verification_code'] = $value ?: str_random();
+    }
+
+    // scopes
+
+    public function scopeWhereCode($query, $code)
+    {
+        return $query->where('email_verification_code', $code);
     }
 
     // relationships
@@ -94,6 +107,10 @@ class User extends Model
     public static function makeMe(Request $request, $me = null, $meta = [])
     {
         $data = $request->all();
+        // make sure to use the default values as default
+        // then override them
+        $attr = app(static::class)->getAttributes();
+        $data = array_merge($attr, $data);
 
         if ($me === null) {
             $me = static::create($data);

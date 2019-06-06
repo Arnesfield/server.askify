@@ -13,7 +13,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $with = $request->get('with', []);
-        $users = User::with($with)->get();
+        $users = User::with($with)->latest()->get();
         $users = UserResource::collection($users);
         return jresponse($users);
     }

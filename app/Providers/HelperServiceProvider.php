@@ -6,6 +6,16 @@ use Illuminate\Support\ServiceProvider;
 
 class HelperServiceProvider extends ServiceProvider
 {
+    protected $helpersPath = 'app/Helpers';
+
+    protected $helpers = [
+        'AuthUserHelper',
+        'CarbonHelper',
+        'HumanizeDateHelper',
+        'JsonResponseHelper',
+        'RequestGetArrayHelper',
+        'StatusHelper',
+    ];
     /**
      * Register any helper services.
      *
@@ -13,16 +23,8 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $path = base_path('app/Helpers');
-        $helpers = [
-            'AuthUserHelper',
-            'HumanizeDateHelper',
-            'JsonResponseHelper',
-            'RequestGetArrayHelper',
-            'StatusHelper',
-        ];
-
-        foreach ($helpers as $helper) {
+        $path = base_path($this->helpersPath);
+        foreach ($this->helpers as $helper) {
             require_once "$path/$helper.php";
         }
     }

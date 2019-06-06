@@ -35,6 +35,10 @@ class LoginController extends Controller
         }
 
         $user = new UserResource($user);
-        return jresponse($user);
+        $msg = $user->email_verified_at
+            ? 'Logged in successfully.'
+            : 'Logged in. Please check your email to verify your account.';
+
+        return jresponse(compact('msg', 'user'));
     }
 }

@@ -51,13 +51,11 @@ class Handler extends ExceptionHandler
             return jresponse('You must be logged in first.', 401);
         } else if ($exception instanceof ValidationException) {
             // only return the first message ;)
-            $errors = $exception->validator->getMessageBag()->toArray();
-            $eMsg = $exception->getMessage();
-            $values = array_values($errors);
+            $errors = $exception->validator->errors()->all();
+            $msg = $exception->getMessage();
 
-            // get string message only
-            $res = $values[0] ?? $exception->getMessage();
-            $res = is_array($res) ? $res[0] ?? $res : $res;
+            // get first string message only
+            $res = $errors[0] ?? $msg;
 
             return jresponse($res, $exception->status);
         }
