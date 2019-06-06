@@ -1,0 +1,4 @@
+#!/bin/bash
+# also delete all uploaded images
+cd ./public/uploads/img/ && rm -rf IMG*
+printf '\nUploaded images cleared.\n'

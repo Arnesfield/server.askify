@@ -11,7 +11,7 @@ class RegisterController extends Controller
 {
     public function index(Request $request)
     {
-        $R = User::getValidationRules();
+        $R = User::getValidationRules(null, ['roles' => '3,4']);
         $this->validate($request, $R['rules'], $R['errors']);
 
         $user = User::makeMe($request);

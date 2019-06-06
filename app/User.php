@@ -75,6 +75,20 @@ class User extends Model
         return $this->update(['email_verified_at' => $d]);
     }
 
+    public function setVerificationCode($code = null, $force = false)
+    {
+        $code = $code ?: str_random();
+        // check if exists
+        $attrCode = $this->original['email_verification_code'];
+        if (!$force && $attrCode) {
+            return false;
+        }
+
+        // change it
+        $this->attributes['email_verification_code'] = $code;
+        return true;
+    }
+
     // mutators
 
     public function setPasswordAttribute($value)
@@ -107,12 +121,9 @@ class User extends Model
     public static function makeMe(Request $request, $me = null, $meta = [])
     {
         $data = $request->all();
-        // make sure to use the default values as default
-        // then override them
-        $attr = app(static::class)->getAttributes();
-        $data = array_merge($attr, $data);
 
         if ($me === null) {
+            $data['email_verification_code'] = '';
             $me = static::create($data);
         } else {
             $me->update($data);
@@ -136,18 +147,28 @@ class User extends Model
         'email.required' => 'Email is required.',
         'email.email' => 'The email must be a valid email address.',
         'email.unique' => 'The email has already been taken.',
+        'avatar.required' => 'Avatar is required.',
+        'avatar.image' => 'Avatar should be an image.',
 
         'old_password.required_with' => 'Please enter your old password.',
         'password.required_with' => 'Password is required.',
         'password.min' => 'Password should be at least 6 characters or above.',
         'passconf.required_with' => 'Please confirm your password.',
         'passconf.same' => 'Passwords should be the same.',
+
+        'roles.array' => 'Select an account type.',
+        'roles.in' => 'Account type is invalid.',
+    ];
+
+    protected static $validationMeta = [
+        'roles' => '1,2,3,4'
     ];
 
     // Validateable
-    public static function getValidationRules($id = null)
+    public static function getValidationRules($id = null, $meta = [])
     {
         $idCond = $id ? ",$id" : '';
+        $meta = array_merge(static::$validationMeta, $meta);
 
         return [
             'rules' => [
@@ -155,10 +176,13 @@ class User extends Model
                 'mname' => 'sometimes',
                 'lname' => 'sometimes|required',
                 'email' => 'sometimes|required|email|unique:users,email' . $idCond,
+                'avatar' => 'sometimes|required|image',
 
                 'old_password' => 'sometimes|required_with:password',
                 'password' => 'required_with:passconf,old_password|min:6',
                 'passconf' => 'sometimes|required_with:password|same:password',
+
+                'roles' => 'sometimes|array|in:' . $meta['roles'],
             ],
             'errors' => static::$validationErrors
         ];
