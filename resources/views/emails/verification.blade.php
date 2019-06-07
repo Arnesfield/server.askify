@@ -12,7 +12,7 @@ body {
         {{ $attrDate }}
         alt="logo"
         src="{{ $config['logo'] }}"
-        style="vertical-align: middle; display: inline-block; width: 32px; height: 32px"
+        style="vertical-align: middle; display: inline-block; width: 32px; height: 32px; font-size: 8px"
       />
 
       <span
