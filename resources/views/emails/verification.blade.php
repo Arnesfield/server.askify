@@ -10,6 +10,7 @@ body {
     <h1 style="color: {{ $config['color_primary'] }};">
       <img
         {{ $attrDate }}
+        alt="logo"
         src="{{ $config['logo'] }}"
         style="vertical-align: middle; display: inline-block; width: 32px; height: 32px"
       />
