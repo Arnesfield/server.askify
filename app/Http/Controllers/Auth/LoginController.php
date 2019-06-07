@@ -34,11 +34,13 @@ class LoginController extends Controller
             return jresponse('Invalid email or password.', 401);
         }
 
-        $user = new UserResource($user);
-        $msg = $user->email_verified_at
-            ? 'Logged in successfully.'
-            : 'Logged in. Please check your email to verify your account.';
+        // if not yet verified
+        if (!$user->email_verified_at) {
+            return jresponse('Please check your email to verify your account first.', 401);
+        }
 
+        $msg = 'Logged in successfully.';
+        $user = new UserResource($user);
         return jresponse(compact('msg', 'user'));
     }
 }

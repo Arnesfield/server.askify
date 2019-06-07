@@ -30,7 +30,7 @@ class VerifyEmailController extends Controller
 
         $res = $user->verifyEmail();
         return $res
-            ? jresponse('Account email verified.')
+            ? jresponse('Account email verified. You may now login.')
             : jresponse('Unable to verify account.', 422);
     }
 }

@@ -41,3 +41,13 @@ $router->group(['prefix' => 'questions'], function() use ($router) {
     $router->delete('{id}', 'Core\QuestionController@destroy');
     $router->patch('{id}/restore', 'Core\QuestionController@restore');
 });
+
+// answers
+$router->group(['prefix' => 'answers'], function() use ($router) {
+    $router->get('', 'Core\AnswerController@index');
+    $router->post('', 'Core\AnswerController@store');
+    $router->get('{id}', 'Core\AnswerController@show');
+    $router->patch('{id}', 'Core\AnswerController@update');
+    $router->delete('{id}', 'Core\AnswerController@destroy');
+    $router->patch('{id}/restore', 'Core\AnswerController@restore');
+});

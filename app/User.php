@@ -2,24 +2,22 @@
 
 namespace App;
 
-use App\Interfaces\Makeable;
-use App\Interfaces\Validateable;
-use App\Traits\FileUploadable;
-use App\Traits\Respondable;
+use App\Utils\FileUploadable\FileUploadable;
+use App\Utils\FileUploadable\FileUploadableContract;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
-class User extends Model
-    implements Makeable, Validateable, AuthenticatableContract, AuthorizableContract
+class User
+    extends CommonModel
+    implements FileUploadableContract, AuthenticatableContract, AuthorizableContract
 {
-    use FileUploadable, Respondable;
+    use FileUploadable;
     use SoftDeletes, Authenticatable, Authorizable;
 
     protected $fillable = [
@@ -118,6 +116,11 @@ class User extends Model
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 
     // override

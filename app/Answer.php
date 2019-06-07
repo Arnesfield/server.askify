@@ -8,14 +8,14 @@ use App\Utils\FileUploadable\FileUploadableContract;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Question extends CommonModel implements FileUploadableContract
+class Answer extends CommonModel implements FileUploadableContract
 {
     use FileUploadable;
     use SoftDeletes;
 
     protected $fillable = [
-        'user_id',
-        'title', 'content', 'img_src',
+        'user_id', 'question_id',
+        'content', 'img_src',
         'deleted_at',
     ];
 
@@ -25,24 +25,24 @@ class Question extends CommonModel implements FileUploadableContract
 
     protected $attributes = [
         'user_id' => null,
-        'title' => '',
+        'question_id' => null,
         'content' => '',
         'img_src' => null,
 		'deleted_at' => null,
     ];
 
     protected static $responseMessages = [
-        'not found' => 'Question not found.',
+        'not found' => 'Answer not found.',
 
-        'create success' => 'Question posted.',
-        'update success' => 'Question updated.',
-        'delete success' => 'Question deleted.',
-        'restore success' => 'Question restored.',
+        'create success' => 'Answer posted.',
+        'update success' => 'Answer updated.',
+        'delete success' => 'Answer deleted.',
+        'restore success' => 'Answer restored.',
 
-        'create fail' => 'Unable to post question.',
-        'update fail' => 'Unable to update question.',
-        'delete fail' => 'Unable to delete question.',
-        'restore fail' => 'Unable to restore question.',
+        'create fail' => 'Unable to post answer.',
+        'update fail' => 'Unable to update answer.',
+        'delete fail' => 'Unable to delete answer.',
+        'restore fail' => 'Unable to restore answer.',
     ];
 
     // methods
@@ -58,9 +58,9 @@ class Question extends CommonModel implements FileUploadableContract
         return $this->belongsTo(User::class);
     }
 
-    public function answers()
+    public function question()
     {
-        return $this->hasMany(Answer::class);
+        return $this->belongsTo(Question::class);
     }
 
     // override
@@ -69,20 +69,24 @@ class Question extends CommonModel implements FileUploadableContract
     public static function makeMe(Request $request, $me = null, $meta = [])
     {
         $data = $request->all();
-
+        
         if ($me === null) {
+            $questionId = $request->question_id;
+            // if there was no question, do not post
+            $question = Question::find($questionId);
+            if (!$question) {
+                // TODO: handle to question here
+            }
+
             $me = new static($data);
-            user($request)->questions()->save($me);
+            user($request)->answers()->save($me);
         } else {
+            // disregard even if no question
+            //! NOTE: will also update question_id if specified
             $me->update($data);
         }
 
         // relationships
-        // TODO: to follow tags
-        $ids = requestGetArray($request, 'tags');
-        if ($ids !== false) {
-            $me->tags()->sync($ids);
-        }
 
         // upload
         $me->uploadImage($request, 'img_src');
@@ -91,11 +95,10 @@ class Question extends CommonModel implements FileUploadableContract
     }
 
     protected static $validationErrors = [
-        'title.required' => 'Title is required.',
+        'question_id.required' => 'Oops! The question was not found.',
+
         'content.required' => 'Content or description is required.',
         'img_src.image' => 'Uploaded item should be an image.',
-
-        'tags.array' => 'Unable to read tags.',
     ];
 
     // Validateable
@@ -105,11 +108,10 @@ class Question extends CommonModel implements FileUploadableContract
 
         return [
             'rules' => [
-                'title' => 'sometimes|required',
+                'question_id' => 'sometimes|required',
+
                 'content' => 'sometimes|required',
                 'img_src' => 'sometimes|image',
-
-                'tags' => 'sometimes|array',
             ],
             'errors' => static::$validationErrors
         ];

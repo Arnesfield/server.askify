@@ -43,7 +43,7 @@ class FileUpload
         // $fileName = $file->getClientOriginalName();
         $datetime = date('Y-m-d_h-i-s_A');
         $ext = $file->getClientOriginalExtension();
-        $rand = uniqid();
+        $rand = str_random();
 
         $result = "{$prefix}_{$datetime}_{$rand}.{$ext}";
         return $result;
