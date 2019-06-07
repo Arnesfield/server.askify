@@ -31,7 +31,7 @@ class LoginController extends Controller
             ! $user ||
             ! $user->checkPassword($password)
         ) {
-            return jresponse('Invalid email or password.', 401);
+            return jresponse('Incorrect email or password.', 401);
         }
 
         // if not yet verified
