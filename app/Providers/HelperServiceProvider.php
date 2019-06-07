@@ -11,6 +11,7 @@ class HelperServiceProvider extends ServiceProvider
     protected $helpers = [
         'AuthUserHelper',
         'CarbonHelper',
+        'ErrorHelper',
         'HumanizeDateHelper',
         'JsonResponseHelper',
         'RequestGetArrayHelper',

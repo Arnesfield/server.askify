@@ -75,7 +75,8 @@ class Answer extends CommonModel implements FileUploadableContract
             // if there was no question, do not post
             $question = Question::find($questionId);
             if (!$question) {
-                // TODO: handle to question here
+                $errorMsg = static::$validationErrors['question_id.required'];
+                error($errorMsg, 401);
             }
 
             $me = new static($data);
@@ -96,6 +97,7 @@ class Answer extends CommonModel implements FileUploadableContract
 
     protected static $validationErrors = [
         'question_id.required' => 'Oops! The question was not found.',
+        'question_id.exists' => 'Oops! The question was not found.',
 
         'content.required' => 'Content or description is required.',
         'img_src.image' => 'Uploaded item should be an image.',
@@ -108,7 +110,7 @@ class Answer extends CommonModel implements FileUploadableContract
 
         return [
             'rules' => [
-                'question_id' => 'sometimes|required',
+                'question_id' => 'sometimes|required|exists:questions,id',
 
                 'content' => 'sometimes|required',
                 'img_src' => 'sometimes|image',
