@@ -9,55 +9,53 @@ body {
   <thead>
     <h1 style="color: {{ $config['color_primary'] }};">
       <img
-        data-time="{{ $date }}"
+        {{ $attrDate }}
         src="{{ $config['logo'] }}"
         style="vertical-align: middle; display: inline-block; width: 32px; height: 32px"
       />
 
-      <span style="vertical-align: middle;">{{ $config['app_name'] }}
-        {{ $hiddenDate }}
-      </span>
-
-      {{ $hiddenDate }}
+      <span
+        {{ $attrDate }}
+        style="vertical-align: middle;"
+      >{{ $config['app_name'] }}</span>
     </h1>
   </thead>
 
   <tbody>
-    <h3>Email Verification
-      {{ $hiddenDate }}
-    </h3>
+    <h3 {{ $attrDate }}>Email Verification</h3>
 
-    <p>Dear <strong style="color: {{ $config['color_primary'] }};">{{ $user['fullname'] }}</strong>,
-      {{ $hiddenDate }}
+    <p>Dear
+      <strong
+        {{ $attrDate }}
+        style="color: {{ $config['color_primary'] }};"
+      >{{ $user->fullname }}</strong>,
     </p>
 
-    <p>
+    <p {{ $attrDate }}>
       We need you to confirm this email address in order to get started with exploring Askify. Email confirmation is simple and fast, just click on the link below to complete this process.
-      {{ $hiddenDate }}
     </p>
 
     <a
+      {{ $attrDate }}
       style="color: {{ $config['color_accent'] }}"
       href="{{ url('auth/verify?c=' . $code) }}"
-    >Verify email address
-      {{ $hiddenDate }}
-    </a>
+    >Verify email address</a>
   </tbody>
   
   <tfoot>
     <div style="padding-top: 24px;">
       <small>
-        <p style="color: #757575">
+        <p style="color: #757575" {{ $attrDate }}>
           Email sent to
           <span
+            {{ $attrDate }}
             style="color: {{ $config['color_accent'] }}; text-decoration: underline"
-          >{{ $user['email'] }}</span>
+          >{{ $user->email }}</span>
           on <strong>{{ $date }}</strong>.
 
-          <br>
+          <br/>
 
           &copy; 2019. {{ $config['app_name'] }}.
-          {{ $hiddenDate }}
         </p>
       </small>
     </div>

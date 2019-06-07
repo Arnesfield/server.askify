@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Mail\EmailVerification;
 use App\Utils\FileUploadable\FileUploadable;
 use App\Utils\FileUploadable\FileUploadableContract;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Authenticatable;
 use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -98,6 +100,14 @@ class User
         // change it
         $this->attributes['email_verification_code'] = $code;
         return true;
+    }
+
+    public function mailEmailVerificationCode()
+    {
+        $email = new EmailVerification($this);
+        Mail::to($this)->send($email);
+
+        return count(Mail::failures()) === 0;
     }
 
     // accessors

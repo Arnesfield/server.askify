@@ -25,6 +25,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->configure('app');
+$app->configure('mail');
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,7 @@ $app->singleton(
 |
 */
 
+$app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(App\Providers\HelperServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);

@@ -51,3 +51,14 @@ $router->group(['prefix' => 'answers'], function() use ($router) {
     $router->delete('{id}', 'Core\AnswerController@destroy');
     $router->patch('{id}/restore', 'Core\AnswerController@restore');
 });
+
+
+//! non prod
+if (env('APP_ENV') !== 'production') {
+    $router->group(['prefix' => 'mail'], function() use ($router) {
+        $router->get('verification', function () use ($router) {
+            $user = \App\User::find(1);
+            return new \App\Mail\EmailVerification($user);
+        });
+    });
+}
