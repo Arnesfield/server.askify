@@ -16,6 +16,7 @@ class HelperServiceProvider extends ServiceProvider
         'JsonResponseHelper',
         'RequestGetArrayHelper',
         'StatusHelper',
+        'UrlHelper',
     ];
     /**
      * Register any helper services.

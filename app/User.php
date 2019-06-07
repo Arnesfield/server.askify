@@ -20,6 +20,10 @@ class User
     use FileUploadable;
     use SoftDeletes, Authenticatable, Authorizable;
 
+    protected $appends = [
+        'fullname',
+    ];
+
     protected $fillable = [
         'fname', 'mname', 'lname', 'email', 'avatar', 'password',
         'email_verification_code',
@@ -62,6 +66,15 @@ class User
 
     // methods
 
+    public function fullname($withMiddle = true)
+    {
+        $name = $this->fname . ' ';
+        $name .= $withMiddle && $this->mname ? $this->mname . ' ' : '';
+        $name .= $this->lname;
+
+        return $name;
+    }
+
     public function checkPassword($password)
     {
         return Hash::check($password, $this->password);
@@ -85,6 +98,13 @@ class User
         // change it
         $this->attributes['email_verification_code'] = $code;
         return true;
+    }
+
+    // accessors
+
+    public function getFullnameAttribute()
+    {
+        return $this->fullName();
     }
 
     // mutators
