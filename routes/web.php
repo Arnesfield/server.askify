@@ -20,6 +20,7 @@ $router->group(['prefix' => 'auth'], function() use ($router) {
     $router->get('me', 'Auth\MeController@index');
     $router->post('register', 'Auth\RegisterController@index');
     $router->get('verify', 'Auth\VerifyEmailController@index');
+    $router->post('resend', 'Auth\ResendVerificationCodeController@index');
 });
 
 // users
@@ -60,5 +61,12 @@ if (env('APP_ENV') !== 'production') {
             $user = \App\User::find(1);
             return new \App\Mail\EmailVerification($user);
         });
+    });
+
+    $router->get('mail/send', function () use ($router) {
+        $user = \App\User::find(1);
+        $res = $user->sendEmailVerificationCode();
+        return jresponse($res);
+        // return new \App\Mail\EmailVerification($user);
     });
 }

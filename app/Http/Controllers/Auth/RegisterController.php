@@ -19,7 +19,10 @@ class RegisterController extends Controller
             return jresponse('Unable to register your account.', 422);
         }
 
-        // TODO: send mail
-        return jresponse('Account registered. An email has been sent to verify your account.');
+        // send mail
+        $res = $user->sendEmailVerificationCode();
+        return $res
+            ? jresponse('Account registered. An email has been sent to verify your account.')
+            : jresponse('Account registered. Unable to send email verification code.', 422);
     }
 }

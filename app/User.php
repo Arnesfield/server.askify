@@ -102,7 +102,7 @@ class User
         return true;
     }
 
-    public function mailEmailVerificationCode()
+    public function sendEmailVerificationCode()
     {
         $email = new EmailVerification($this);
         Mail::to($this)->send($email);
