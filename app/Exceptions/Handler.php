@@ -66,12 +66,17 @@ class Handler extends ExceptionHandler
             return jresponse($res, $exception->status);
         }
 
-        if (env('APP_ENV') === 'production') {
+        $isProd = env('APP_ENV') === 'production';
+        $isMobile = env('APP_ENV') === 'mobile';
+
+        if ($isProd || $isMobile) {
             if ($exception instanceof MethodNotAllowedHttpException) {
                 return jresponse('Unable to deliver your request.', 405);
             }
         }
 
-        return parent::render($request, $exception);
+        return $isProd
+            ? jresponse('An error occurred.', 422)
+            : parent::render($request, $exception);
     }
 }
