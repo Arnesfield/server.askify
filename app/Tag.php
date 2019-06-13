@@ -67,16 +67,16 @@ class Tag extends CommonModel implements FileUploadableContract
     public static function makeMe(Request $request, $me = null, $meta = [])
     {
         $data = $request->all();
-
+        
         if ($me === null) {
-            $me = new static($data);
+            $me = static::create($data);
         } else {
             $me->update($data);
         }
-
+        
         // upload
         $me->uploadImage($request, 'img_src');
-
+        
         return $me;
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Utils\Taggable;
 
+use Illuminate\Http\Request;
+
 interface TaggableContract
 {
     public function tags();

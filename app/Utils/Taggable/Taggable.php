@@ -28,15 +28,15 @@ trait Taggable
                 if (!$mTag) {
                     $R = Tag::getValidationRules();
                     $validator = \Validator::make($tag, $R['rules'], $R['errors']);
-    
+
                     // disregard if validation fails
                     if ($validator->fails()) {
                         continue;
                     }
-        
+
                     $nRequest = new Request;
                     $nRequest->replace($tag);
-    
+
                     $mTag = Tag::makeMe($nRequest);
                     // if not created, just skip it mygosh
                     if (!$mTag) {
@@ -54,6 +54,6 @@ trait Taggable
 
         return $return
             ? $ids
-            : $me->tags()->sync($ids);
+            : $this->tags()->sync($ids);
     }
 }
