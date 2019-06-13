@@ -5,6 +5,8 @@ namespace App;
 use App\Mail\EmailVerification;
 use App\Utils\FileUploadable\FileUploadable;
 use App\Utils\FileUploadable\FileUploadableContract;
+use App\Utils\Taggable\Taggable;
+use App\Utils\Taggable\TaggableContract;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,9 +19,13 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 
 class User
     extends CommonModel
-    implements FileUploadableContract, AuthenticatableContract, AuthorizableContract
+    implements
+        TaggableContract,
+        FileUploadableContract,
+        AuthenticatableContract,
+        AuthorizableContract
 {
-    use FileUploadable;
+    use Taggable, FileUploadable;
     use SoftDeletes, Authenticatable, Authorizable;
 
     protected $appends = [
@@ -140,17 +146,23 @@ class User
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'user_roles');
+        return $this->belongsToMany('App\Role', 'user_roles');
     }
 
     public function questions()
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany('App\Question');
     }
 
     public function answers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany('App\Answer');
+    }
+
+    public function tags()
+    {
+        // preferences
+        return $this->morphToMany('App\Tag', 'taggable');
     }
 
     // override
@@ -173,6 +185,8 @@ class User
             $me->roles()->sync($ids);
         }
 
+        $me->syncTags($request);
+
         // upload
         $me->uploadImage($request, 'avatar');
 
@@ -185,8 +199,8 @@ class User
         'email.required' => 'Email is required.',
         'email.email' => 'The email must be a valid email address.',
         'email.unique' => 'The email has already been taken.',
-        'avatar.required' => 'Avatar is required.',
-        'avatar.image' => 'Avatar should be an image.',
+        // 'avatar.required' => 'Avatar is required.',
+        // 'avatar.image' => 'Avatar should be an image.',
 
         'old_password.required_with' => 'Please enter your old password.',
         'password.required_with' => 'Password is required.',
@@ -214,7 +228,7 @@ class User
                 'mname' => 'sometimes',
                 'lname' => 'sometimes|required',
                 'email' => 'sometimes|required|email|unique:users,email' . $idCond,
-                'avatar' => 'sometimes|required|image',
+                'avatar' => 'sometimes', // required|image
 
                 'old_password' => 'sometimes|required_with:password',
                 'password' => 'required_with:passconf,old_password|min:6',

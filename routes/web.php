@@ -53,6 +53,16 @@ $router->group(['prefix' => 'answers'], function() use ($router) {
     $router->patch('{id}/restore', 'Core\AnswerController@restore');
 });
 
+// tags
+$router->group(['prefix' => 'tags'], function() use ($router) {
+    $router->get('', 'Core\TagController@index');
+    $router->post('', 'Core\TagController@store');
+    $router->get('{id}', 'Core\TagController@show');
+    $router->patch('{id}', 'Core\TagController@update');
+    $router->delete('{id}', 'Core\TagController@destroy');
+    $router->patch('{id}/restore', 'Core\TagController@restore');
+});
+
 
 //! non prod
 if (env('APP_ENV') !== 'production') {

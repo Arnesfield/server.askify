@@ -4,13 +4,15 @@ namespace App;
 
 use App\Utils\FileUploadable\FileUploadable;
 use App\Utils\FileUploadable\FileUploadableContract;
+use App\Utils\Taggable\Taggable;
+use App\Utils\Taggable\TaggableContract;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Question extends CommonModel implements FileUploadableContract
+class Question extends CommonModel implements TaggableContract, FileUploadableContract
 {
-    use FileUploadable;
+    use Taggable, FileUploadable;
     use SoftDeletes;
 
     protected $fillable = [
@@ -55,12 +57,17 @@ class Question extends CommonModel implements FileUploadableContract
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo('App\User');
     }
 
     public function answers()
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany('App\Answer');
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany('App\Tag', 'taggable');
     }
 
     // override
@@ -78,11 +85,7 @@ class Question extends CommonModel implements FileUploadableContract
         }
 
         // relationships
-        // TODO: to follow tags
-        $ids = requestGetArray($request, 'tags');
-        if ($ids !== false) {
-            $me->tags()->sync($ids);
-        }
+        $me->syncTags($request);
 
         // upload
         $me->uploadImage($request, 'img_src');
@@ -93,9 +96,7 @@ class Question extends CommonModel implements FileUploadableContract
     protected static $validationErrors = [
         'title.required' => 'Title is required.',
         'content.required' => 'Content or description is required.',
-        'img_src.image' => 'Uploaded item should be an image.',
-
-        'tags.array' => 'Unable to read tags.',
+        // 'img_src.image' => 'Uploaded item should be an image.',
     ];
 
     // Validateable
@@ -107,9 +108,7 @@ class Question extends CommonModel implements FileUploadableContract
             'rules' => [
                 'title' => 'sometimes|required',
                 'content' => 'sometimes|required',
-                'img_src' => 'sometimes|image',
-
-                'tags' => 'sometimes|array',
+                // 'img_src' => 'sometimes|image',
             ],
             'errors' => static::$validationErrors
         ];

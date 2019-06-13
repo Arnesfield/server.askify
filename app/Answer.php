@@ -55,12 +55,12 @@ class Answer extends CommonModel implements FileUploadableContract
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo('App\User');
     }
 
     public function question()
     {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo('App\Question');
     }
 
     // override
@@ -100,7 +100,7 @@ class Answer extends CommonModel implements FileUploadableContract
         'question_id.exists' => 'Oops! The question was not found.',
 
         'content.required' => 'Content or description is required.',
-        'img_src.image' => 'Uploaded item should be an image.',
+        // 'img_src.image' => 'Uploaded item should be an image.',
     ];
 
     // Validateable
@@ -113,7 +113,7 @@ class Answer extends CommonModel implements FileUploadableContract
                 'question_id' => 'sometimes|required|exists:questions,id',
 
                 'content' => 'sometimes|required',
-                'img_src' => 'sometimes|image',
+                // 'img_src' => 'sometimes|image',
             ],
             'errors' => static::$validationErrors
         ];
