@@ -1,0 +1,10 @@
+#!/bin/bash
+declare -a arr
+arr=(
+  TagsTableSeeder
+  UsersTableSeeder
+)
+
+for var in "${arr[@]}"; do
+  php artisan db:seed --class=$var
+done

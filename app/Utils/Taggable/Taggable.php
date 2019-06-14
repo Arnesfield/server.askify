@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 
 trait Taggable
 {
-    public function syncTags(Request $request, $key = 'tags', $return = false)
+    public function syncTags($request, $key = 'tags', $return = false)
     {
-        $tags = requestGetArray($request, $key);
+        // set defaults
+        $tags = $request instanceof Request
+            ? requestGetArray($request, $key)
+            : is_array($request)
+                ? $request
+                : false;
+
+        if (is_bool($key)) {
+            $return = $key;
+            $key = 'tags';
+        }
+
         if ($tags === false) {
             return false;
         }
