@@ -11,6 +11,23 @@ class UserResource extends JsonResource
         $res = parent::toArray($request);
         $formatted = [];
 
+        if ( isset($res['questions']) ) {
+            $questions = QuestionResource::collection($this->questions);
+            $formatted['questions'] = $questions->toArray($request);
+        }
+        if ( isset($res['answers']) ) {
+            $answers = AnswerResource::collection($this->answers);
+            $formatted['answers'] = $answers->toArray($request);
+        }
+        if ( isset($res['roles']) ) {
+            $roles = RoleResource::collection($this->roles);
+            $formatted['roles'] = $roles->toArray($request);
+        }
+        if ( isset($res['tags']) ) {
+            $tags = TagResource::collection($this->tags);
+            $formatted['tags'] = $tags->toArray($request);
+        }
+
         // dates
         humanizeDate($this, $res, [
             'email_verified_at',
