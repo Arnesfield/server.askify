@@ -66,7 +66,7 @@ class UsersTableSeeder extends Seeder
     private function generateTagIds($min = 0)
     {
         $tags = Tag::all();
-        $noOfTags = rand($min, $tags->count());
+        $noOfTags = rand($min, (int) ($tags->count() / 2));
         $allTags = $tags->random($noOfTags);
         return $allTags->pluck('id')->toArray();
     }

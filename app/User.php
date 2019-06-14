@@ -142,6 +142,20 @@ class User
         return $query->where('email_verification_code', $code);
     }
 
+    public function scopeWhereRoles($query, $roles = [])
+    {
+        // should be an array
+        $roles = is_numeric($roles) ? [$roles] : $roles;
+
+        if ($roles) {
+            $query->whereHas('roles', function($q) use ($roles) {
+                $q->whereIn('roles.id', $roles);
+            });
+        }
+
+        return $query;
+    }
+
     // relationships
 
     public function roles()
