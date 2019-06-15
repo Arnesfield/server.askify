@@ -63,24 +63,39 @@ class Answer extends CommonModel implements FileUploadableContract
         return $this->belongsTo('App\Question');
     }
 
+    public function votes()
+    {
+        return $this->morphMany('App\Vote', 'voteable');
+    }
+
     // override
 
     // Makeable
+    protected static function validateOnCreate($data) {
+        // if there was no question, do not post
+        $R = static::getValidationRules();
+        $validator = \Validator::make(
+            $data,
+            [ 'question_id' => 'required|exists:questions,id' ],
+            $R['errors']
+        );
+
+        if ($validator->fails()) {
+            $errorMsg = $R['errors']['question_id.required'];
+            error($errorMsg, 400);
+        }
+    }
+
     public static function makeMe(Request $request, $me = null, $meta = [])
     {
         $data = $request->all();
         
         if ($me === null) {
-            $questionId = $request->question_id;
-            // if there was no question, do not post
-            $question = Question::find($questionId);
-            if (!$question) {
-                $errorMsg = static::$validationErrors['question_id.required'];
-                error($errorMsg, 401);
-            }
+            $user = user($request);
+            static::validateOnCreate($data);
 
             $me = new static($data);
-            user($request)->answers()->save($me);
+            $user->answers()->save($me);
         } else {
             // disregard even if no question
             //! NOTE: will also update question_id if specified

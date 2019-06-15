@@ -66,6 +66,15 @@ $router->group(['prefix' => 'tags'], function() use ($router) {
     $router->patch('{id}/restore', 'Core\TagController@restore');
 });
 
+// votes
+$router->group(['prefix' => 'votes'], function() use ($router) {
+    $router->get('', 'Core\VoteController@index');
+    $router->post('', 'Core\VoteController@store');
+    $router->get('{id}', 'Core\VoteController@show');
+    $router->patch('{id}', 'Core\VoteController@update');
+    $router->delete('{id}', 'Core\VoteController@destroy');
+    $router->patch('{id}/restore', 'Core\VoteController@restore');
+});
 
 //! non prod
 if (env('APP_ENV') !== 'production') {

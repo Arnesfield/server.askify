@@ -179,6 +179,11 @@ class User
         return $this->morphToMany('App\Tag', 'taggable');
     }
 
+    public function votes()
+    {
+        return $this->hasMany('App\Vote');
+    }
+
     // override
 
     // Makeable

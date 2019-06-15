@@ -32,12 +32,12 @@ class Tag extends CommonModel implements FileUploadableContract
     protected static $responseMessages = [
         'not found' => 'Tag not found.',
 
-        'create success' => 'Tag posted.',
+        'create success' => 'Tag created.',
         'update success' => 'Tag updated.',
         'delete success' => 'Tag deleted.',
         'restore success' => 'Tag restored.',
 
-        'create fail' => 'Unable to post tag.',
+        'create fail' => 'Unable to create tag.',
         'update fail' => 'Unable to update tag.',
         'delete fail' => 'Unable to delete tag.',
         'restore fail' => 'Unable to restore tag.',

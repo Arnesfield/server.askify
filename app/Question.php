@@ -70,6 +70,11 @@ class Question extends CommonModel implements TaggableContract, FileUploadableCo
         return $this->morphToMany('App\Tag', 'taggable');
     }
 
+    public function votes()
+    {
+        return $this->morphMany('App\Vote', 'voteable');
+    }
+
     // override
 
     // Makeable
