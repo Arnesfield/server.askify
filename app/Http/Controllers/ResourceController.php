@@ -26,23 +26,33 @@ abstract class ResourceController extends Controller
     public function index(Request $request)
     {
         $with = $request->get('with', []);
-        $users = $this->model::with($with)->latest()->get();
-        $users = $this->modelResource::collection($users);
-        return jresponse($users);
+        $withCount = $request->get('withCount', []);
+
+        $items = $this->model::with($with)
+            ->withCount($withCount)
+            ->latest()
+            ->get();
+
+        $items = $this->modelResource::collection($items);
+        return jresponse($items);
     }
 
     public function show(Request $request, $id)
     {
         $model = $this->model;
         $with = $request->get('with', []);
-        $user = $model::with($with)->find($id);
+        $withCount = $request->get('withCount', []);
 
-        if (!$user) {
-            return $model::rmsg('not found', status($user));
+        $item = $model::with($with)
+            ->withCount($withCount)
+            ->find($id);
+
+        if (!$item) {
+            return $model::rmsg('not found', status($item));
         }
 
-        $user = new $this->modelResource($user);
-        return jresponse($user);
+        $item = new $this->modelResource($item);
+        return jresponse($item);
     }
 
     public function store(Request $request)
@@ -51,8 +61,8 @@ abstract class ResourceController extends Controller
         $R = $model::getValidationRules();
         $this->validate($request, $R['rules'], $R['errors']);
 
-        $user = $model::makeMe($request);
-        return $user
+        $item = $model::makeMe($request);
+        return $item
             ? $model::rmsg('create success')
             : $model::rmsg('create fail', 422);
     }
@@ -60,25 +70,25 @@ abstract class ResourceController extends Controller
     public function update(Request $request, $id)
     {
         $model = $this->model;
-        $user = $model::find($id);
-        if (!$user) {
-            return $model::rmsg('not found', status($user));
+        $item = $model::find($id);
+        if (!$item) {
+            return $model::rmsg('not found', status($item));
         }
         
         $R = $model::getValidationRules($id);
         $this->validate($request, $R['rules'], $R['errors']);
 
-        $model::makeMe($request, $user);
+        $model::makeMe($request, $item);
         return $model::rmsg('update success');
     }
 
     public function destroy(Request $request, $id)
     {
         $model = $this->model;
-        $user = $model::find($id);
-        if (!$user) {
-            return $model::rmsg('not found', status($user));
-        } else if ( ! $user->delete() ) {
+        $item = $model::find($id);
+        if (!$item) {
+            return $model::rmsg('not found', status($item));
+        } else if ( ! $item->delete() ) {
             return $model::rmsg('delete fail', 422);
         }
 
@@ -88,10 +98,10 @@ abstract class ResourceController extends Controller
     public function restore(Request $request, $id)
     {
         $model = $this->model;
-        $user = $model::withTrashed()->find($id);
-        if (!$user) {
-            return $model::rmsg('not found', status($user));
-        } else if ( ! $user->restore() ) {
+        $item = $model::withTrashed()->find($id);
+        if (!$item) {
+            return $model::rmsg('not found', status($item));
+        } else if ( ! $item->restore() ) {
             return $model::rmsg('restore fail', 422);
         }
 

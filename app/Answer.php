@@ -4,19 +4,27 @@ namespace App;
 
 use App\Utils\FileUploadable\FileUploadable;
 use App\Utils\FileUploadable\FileUploadableContract;
+use App\Utils\Voteable\Voteable;
+use App\Utils\Voteable\VoteableContract;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Answer extends CommonModel implements FileUploadableContract
+class Answer
+    extends CommonModel
+    implements FileUploadableContract, VoteableContract
 {
-    use FileUploadable;
+    use FileUploadable, Voteable;
     use SoftDeletes;
 
     protected $fillable = [
         'user_id', 'question_id',
         'content', 'img_src',
         'deleted_at',
+    ];
+
+    protected $appends = [
+        'votes_total',
     ];
 
     protected $dates = [

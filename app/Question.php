@@ -6,19 +6,30 @@ use App\Utils\FileUploadable\FileUploadable;
 use App\Utils\FileUploadable\FileUploadableContract;
 use App\Utils\Taggable\Taggable;
 use App\Utils\Taggable\TaggableContract;
+use App\Utils\Voteable\Voteable;
+use App\Utils\Voteable\VoteableContract;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Question extends CommonModel implements TaggableContract, FileUploadableContract
+class Question
+    extends CommonModel
+    implements
+        TaggableContract,
+        FileUploadableContract,
+        VoteableContract
 {
-    use Taggable, FileUploadable;
+    use Taggable, FileUploadable, Voteable;
     use SoftDeletes;
 
     protected $fillable = [
         'user_id',
         'title', 'content', 'img_src',
         'deleted_at',
+    ];
+
+    protected $appends = [
+        'votes_total',
     ];
 
     protected $dates = [
