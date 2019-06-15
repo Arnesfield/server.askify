@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\ValidationException;
 
-class Vote extends CommonModel implements FileUploadableContract
+class Vote extends CommonModel
 {
     use SoftDeletes;
 
@@ -36,7 +36,7 @@ class Vote extends CommonModel implements FileUploadableContract
 
         'create success' => 'Vote casted.',
         'update success' => 'Vote updated.',
-        'delete success' => 'Vote deleted.',
+        'delete success' => 'Vote removed.',
         'restore success' => 'Vote restored.',
 
         'create fail' => 'Unable to cast vote.',
