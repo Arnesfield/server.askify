@@ -26,6 +26,7 @@ $app->withEloquent();
 
 $app->configure('app');
 $app->configure('mail');
+$app->configure('paypal');
 
 /*
 |--------------------------------------------------------------------------
