@@ -7,7 +7,8 @@
     "require": {
         "php": ">=7.1.3",
         "illuminate/mail": "^5.8",
-        "laravel/lumen-framework": "5.8.*"
+        "laravel/lumen-framework": "5.8.*",
+        "paypal/rest-api-sdk-php": "*"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.4",
