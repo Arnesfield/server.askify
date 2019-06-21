@@ -19,8 +19,8 @@ class Answer
 
     protected $fillable = [
         'user_id', 'question_id',
-        'content', 'img_src',
-        'deleted_at',
+        'content', 'img_src', 'price',
+        'deleted_at', 'privated_at'
     ];
 
     protected $appends = [
@@ -28,7 +28,7 @@ class Answer
     ];
 
     protected $dates = [
-        'deleted_at',
+        'deleted_at', 'privated_at',
     ];
 
     protected $attributes = [
@@ -36,6 +36,7 @@ class Answer
         'question_id' => null,
         'content' => '',
         'img_src' => null,
+        'price' => 0,
 		'deleted_at' => null,
     ];
 
@@ -97,6 +98,9 @@ class Answer
     public static function makeMe(Request $request, $me = null, $meta = [])
     {
         $data = $request->all();
+        if ($request->get('make_private')) {
+            $data['privated_at'] = nowDt();
+        }
         
         if ($me === null) {
             $user = user($request);
@@ -124,6 +128,10 @@ class Answer
 
         'content.required' => 'Content or description is required.',
         // 'img_src.image' => 'Uploaded item should be an image.',
+        'price.required_with' => 'Price is required.',
+        'price.numeric' => 'Invalid price.',
+        'price.min' => 'Price should be 0 or more.',
+        'price.max' => 'Price should not exceed 10.',
     ];
 
     // Validateable
@@ -137,6 +145,8 @@ class Answer
 
                 'content' => 'sometimes|required',
                 // 'img_src' => 'sometimes|image',
+                'price' => 'required_with:make_private|numeric|min:0|max:10',
+                'make_private' => 'sometimes|required'
             ],
             'errors' => static::$validationErrors
         ];
