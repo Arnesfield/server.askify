@@ -23,6 +23,7 @@ class CreateAnswersTable extends Migration
 
             // paid
             $table->integer('price')->default(0);
+            $table->string('currency')->default('USD');
 
             // dates
             $table->timestamp('privated_at')->nullable();

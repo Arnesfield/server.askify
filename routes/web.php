@@ -54,6 +54,11 @@ $router->group(['prefix' => 'answers'], function() use ($router) {
     $router->patch('{id}', 'Core\AnswerController@update');
     $router->delete('{id}', 'Core\AnswerController@destroy');
     $router->patch('{id}/restore', 'Core\AnswerController@restore');
+
+    // pay
+    $router->get('{id}/pay/view', 'Core\PaymentController@index');
+    $router->post('{id}/pay', 'Core\PaymentController@pay');
+    $router->get('{id}/pay', 'Core\PaymentController@pay');
 });
 
 // tags
@@ -74,6 +79,23 @@ $router->group(['prefix' => 'votes'], function() use ($router) {
     $router->patch('{id}', 'Core\VoteController@update');
     $router->delete('{id}', 'Core\VoteController@destroy');
     $router->patch('{id}/restore', 'Core\VoteController@restore');
+});
+
+// votes
+$router->group(['prefix' => 'transactions'], function() use ($router) {
+    $router->get('', 'Core\TransactionController@index');
+    // $router->post('', 'Core\TransactionController@store');
+    $router->get('{id}', 'Core\TransactionController@show');
+    // $router->patch('{id}', 'Core\TransactionController@update');
+    // $router->delete('{id}', 'Core\TransactionController@destroy');
+    // $router->patch('{id}/restore', 'Core\TransactionController@restore');
+});
+
+// votes
+$router->group(['prefix' => 'pay'], function() use ($router) {
+    $router->get('success', 'Core\PaymentController@success');
+    $router->get('cancel', 'Core\PaymentController@cancel');
+    $router->get('payment/{id}', 'Core\PaymentController@show');
 });
 
 //! non prod

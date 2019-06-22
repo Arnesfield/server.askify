@@ -22,5 +22,8 @@ $factory->define(App\Question::class, function (Faker\Generator $faker) {
 $factory->define(App\Answer::class, function (Faker\Generator $faker) {
     return [
         'content' => $faker->paragraph(12),
+        'price' => 1.00,
+        'currency' => 'USD',
+        'privated_at' => nowDt(),
     ];
 });

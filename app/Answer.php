@@ -19,7 +19,7 @@ class Answer
 
     protected $fillable = [
         'user_id', 'question_id',
-        'content', 'img_src', 'price',
+        'content', 'img_src', 'price', 'currency',
         'deleted_at', 'privated_at'
     ];
 
@@ -37,6 +37,7 @@ class Answer
         'content' => '',
         'img_src' => null,
         'price' => 0,
+        'currency' => 'USD',
 		'deleted_at' => null,
     ];
 
@@ -132,6 +133,7 @@ class Answer
         'price.numeric' => 'Invalid price.',
         'price.min' => 'Price should be 0 or more.',
         'price.max' => 'Price should not exceed 10.',
+        'currency.required' => 'Currency is required.',
     ];
 
     // Validateable
@@ -146,6 +148,7 @@ class Answer
                 'content' => 'sometimes|required',
                 // 'img_src' => 'sometimes|image',
                 'price' => 'required_with:make_private|numeric|min:0|max:10',
+                'currency' => 'sometimes|required',
                 'make_private' => 'sometimes|required'
             ],
             'errors' => static::$validationErrors

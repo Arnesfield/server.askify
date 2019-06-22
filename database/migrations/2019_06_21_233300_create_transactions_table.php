@@ -20,8 +20,12 @@ class CreateTransactionsTable extends Migration
 
             $table->bigInteger('amount');
             $table->string('currency')->default('USD');
-            $table->string('invoice_no')->unique();
+            $table->string('payment_id')->nullable()->unique();
+            $table->string('approval_url')->nullable();
             $table->text('description')->nullable();
+
+            // dates
+            $table->timestamp('approved_at')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

@@ -11,12 +11,13 @@ class Transaction extends CommonModel
 
     protected $fillable = [
         'user_id', 'answer_id',
-        'amount', 'currency', 'invoice_no', 'description',
-        'deleted_at',
+        'amount', 'currency', 'payment_id', 'description',
+        'approval_url',
+        'deleted_at', 'approved_at',
     ];
 
     protected $dates = [
-        'deleted_at',
+        'deleted_at', 'approved_at',
     ];
 
     protected $attributes = [
@@ -24,8 +25,10 @@ class Transaction extends CommonModel
 		'answer_id' => null,
         'amount' => 0,
 		'currency' => 'USD',
-		'invoice_no' => null,
+		'payment_id' => null,
 		'description' => null,
+		'approval_url' => null,
+		'approved_at' => null,
 		'deleted_at' => null,
     ];
 
@@ -44,6 +47,13 @@ class Transaction extends CommonModel
     ];
 
     // methods
+
+    public function approveMe($approve = true)
+    {
+        return $this->update([
+            'approved_at' => $approve ? nowDt() : null
+        ]);
+    }
 
     // mutators
 
@@ -69,7 +79,13 @@ class Transaction extends CommonModel
         $data = $request->all();
         
         if ($me === null) {
-            $me = static::create($data);
+            // check meta for user to avoid multiple queries
+            $user = $meta['user'] ?? user($request);
+            $data['answer_id'] = $meta['answer_id'] ?? $request->route('id');
+
+            $me = new static($data);
+            $me->user()->associate($user);
+            $me->save();
         } else {
             $me->update($data);
         }
@@ -84,8 +100,8 @@ class Transaction extends CommonModel
         'amount.required' => 'Amount is required.',
         'amount.min' => 'Minimum amount is 0.',
         'currency.required' => 'Currency is required.',
-        'invoice_no.required' => 'Invoice Number is required.',
-        'invoice_no.unique' => 'Invoice Number is already taken. Try again.',
+        'payment_id.required' => 'Invoice Number is required.',
+        'payment_id.unique' => 'Invoice Number is already taken. Try again.',
     ];
 
     // Validateable
@@ -99,8 +115,9 @@ class Transaction extends CommonModel
 
                 'amount' => 'sometimes|required|numeric|min:0',
                 'currency' => 'sometimes|required',
-                'invoice_no' => 'sometimes|required|unique:transactions,invoice_no',
+                'payment_id' => 'sometimes|required|unique:transactions,payment_id',
                 'description' => 'sometimes',
+                'approval_url' => 'sometimes',
             ],
             'errors' => static::$validationErrors
         ];
