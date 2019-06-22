@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Core;
 
 use App\Answer;
 use App\Transaction;
-use App\Utils\PaypalApi;
+use App\Utils\PayPalApi;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -17,7 +17,7 @@ class PaymentController extends Controller
     public function pay(Request $request, $id)
     {
         $answer = Answer::find($id);
-        $res = PaypalApi::pay($request, user($request), $answer);
+        $res = PayPalApi::pay($request, user($request), $answer);
         return !$res['error']
             ? jresponse($res)
             : jresponse($res, 400);
@@ -25,7 +25,7 @@ class PaymentController extends Controller
 
     public function show(Request $request, $id)
     {
-        $payment = PaypalApi::getPayment($id);
+        $payment = PayPalApi::getPayment($id);
         $payment = $payment->toArray();
         return jresponse($payment);
     }
@@ -43,7 +43,7 @@ class PaymentController extends Controller
         }
 
         // execute payment
-        $execRes = PaypalApi::execute($request);
+        $execRes = PayPalApi::execute($request);
         $res = $execRes['result'] && $transaction->approveMe();
 
         return $res

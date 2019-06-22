@@ -24,7 +24,7 @@ use PayPal\Exception\PayPalConnectionException;
 
 use Illuminate\Http\Request;
 
-class PaypalApi
+class PayPalApi
 {
     private static $context;
 
