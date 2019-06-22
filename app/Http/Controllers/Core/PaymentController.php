@@ -14,11 +14,6 @@ use PayPal\Api\PaymentExecution;
 class PaymentController extends Controller
 {
 
-    public function index(Request $request, $id)
-    {
-        return view('paypal');
-    }
-
     public function pay(Request $request, $id)
     {
         $answer = Answer::find($id);
