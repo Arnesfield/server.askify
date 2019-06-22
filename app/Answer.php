@@ -61,6 +61,11 @@ class Answer
 
     // scopes
 
+    public function scopePublic($query)
+    {
+        return $query->whereNull('privated_at');
+    }
+
     // relationships
 
     public function user()
@@ -76,6 +81,11 @@ class Answer
     public function votes()
     {
         return $this->morphMany('App\Vote', 'voteable');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany('App\Transaction');
     }
 
     // override

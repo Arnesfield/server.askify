@@ -44,6 +44,8 @@ $router->group(['prefix' => 'questions'], function() use ($router) {
     $router->patch('{id}', 'Core\QuestionController@update');
     $router->delete('{id}', 'Core\QuestionController@destroy');
     $router->patch('{id}/restore', 'Core\QuestionController@restore');
+    // view answers visible to user
+    $router->get('{id}/user/{uid}/answers', 'Core\QuestionController@showAnswers');
 });
 
 // answers
