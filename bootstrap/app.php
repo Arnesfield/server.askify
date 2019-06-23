@@ -25,6 +25,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->configure('app');
+$app->configure('cors');
 $app->configure('mail');
 $app->configure('paypal');
 
@@ -60,13 +61,13 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    // App\Http\Middleware\ExampleMiddleware::class,
+    Barryvdh\Cors\HandleCors::class,
+]);
 
 $app->routeMiddleware([
-    // 'auth' => App\Http\Middleware\Authenticate::class,
-    'cors' => App\Http\Middleware\Cors::class,
+    // 'auth' => App\Http\Middleware\Authenticate::class
 ]);
 
 /*
@@ -80,6 +81,7 @@ $app->routeMiddleware([
 |
 */
 
+$app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(App\Providers\HelperServiceProvider::class);
 // $app->register(App\Providers\AppServiceProvider::class);

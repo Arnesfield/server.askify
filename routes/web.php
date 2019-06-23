@@ -59,7 +59,9 @@ $router->group(['prefix' => 'answers'], function() use ($router) {
     $router->patch('{id}/restore', 'Core\AnswerController@restore');
 
     // pay
+    // do both
     $router->post('{id}/pay', 'Core\PaymentController@pay');
+    $router->get('{id}/pay', 'Core\PaymentController@pay');
 });
 
 // tags
