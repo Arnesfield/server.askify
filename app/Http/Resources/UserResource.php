@@ -22,6 +22,9 @@ class UserResource extends JsonResource
         if ( isset($res['roles']) ) {
             $roles = RoleResource::collection($this->roles);
             $formatted['roles'] = $roles->toArray($request);
+
+            // also add ids of roles
+            $formatted['auth'] = $this->roles->pluck('id');
         }
         if ( isset($res['tags']) ) {
             $tags = TagResource::collection($this->tags);
