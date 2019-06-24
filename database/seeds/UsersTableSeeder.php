@@ -14,7 +14,7 @@ class UsersTableSeeder extends Seeder
     private $emails = [
         'admin@email.com',
         'mod@email.com',
-        'student@email.com',
+        'asker@email.com',
         'expert@email.com',
     ];
 
@@ -33,12 +33,12 @@ class UsersTableSeeder extends Seeder
             // get the role first
             $role = $i + 1;
             $exceed = $role > 4;
-            $isStudent = $exceed && $role < $separator;
+            $isAsker = $exceed && $role < $separator;
             $isExpert = $exceed && $role >= $separator;
 
-            $role = $isStudent ? 3 : ($isExpert ? 4 : $role);
+            $role = $isAsker ? 3 : ($isExpert ? 4 : $role);
 
-            $emailPrefix = $role == 3 ? 'student' : 'expert';
+            $emailPrefix = $role == 3 ? 'asker' : 'expert';
 
             // change email here
             $n = $i - 3;
@@ -54,7 +54,7 @@ class UsersTableSeeder extends Seeder
             $user->syncTags($this->generateTagIds());
 
             if ($role == 3) {
-                // if student, just yah
+                // if asker, just yah
                 $this->askQuestions($user);
             } else if ($role == 4) {
                 // if expert, answer questions
@@ -73,7 +73,7 @@ class UsersTableSeeder extends Seeder
 
     private function askQuestions(User $user, $max = 10)
     {
-        // a student asks, so yea add questions and tags
+        // a asker asks, so yea add questions and tags
         $questions = factory(Question::class, rand(0, $max))->make();
         foreach ($questions as $q) {
             $user->questions()->save($q);

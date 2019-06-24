@@ -23,7 +23,7 @@ class RolesTableSeeder extends Seeder
         return [
             ['name' => 'Administrator', 'description' => 'Manages the application.'],
             ['name' => 'Moderator', 'description' => 'Monitors events happening.'],
-            ['name' => 'Student', 'description' => 'Asks the questions.'],
+            ['name' => 'Asker', 'description' => 'Asks the questions.'],
             ['name' => 'Expert', 'description' => 'Answers the questions.'],
         ];
     }
