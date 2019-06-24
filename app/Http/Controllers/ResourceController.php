@@ -27,9 +27,11 @@ abstract class ResourceController extends Controller
     {
         $with = $request->get('with', []);
         $withCount = $request->get('withCount', []);
+        $where = $request->get('where', []);
 
         $items = $this->model::with($with)
             ->withCount($withCount)
+            ->where($where)
             ->latest()
             ->get();
 
