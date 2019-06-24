@@ -25,7 +25,7 @@ class QuestionResource extends JsonResource
             'deleted_at',
             'created_at',
             'updated_at'
-        ]);
+        ], true);
 
         return array_merge($res, $formatted);
     }
