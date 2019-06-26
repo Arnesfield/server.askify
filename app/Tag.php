@@ -75,7 +75,7 @@ class Tag extends CommonModel implements FileUploadableContract
         }
         
         // upload
-        $me->uploadImage($request, 'img_src');
+        $me->uploadImage($request, 'file_img_src', 'img_src', 'tags/');
         
         return $me;
     }

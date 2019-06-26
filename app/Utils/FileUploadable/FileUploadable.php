@@ -36,10 +36,11 @@ trait FileUploadable
         Request $request,
         $paramKey,
         $colKey = null,
-        $appendPath = 'img/',
+        $appendPath = '',
         $prefix = 'IMG',
         $save = true
     ) {
+        $appendPath = 'img/' . $appendPath;
         return $this->uploadFile($request, $paramKey, $colKey, $appendPath, $prefix, $save);
     }
 }

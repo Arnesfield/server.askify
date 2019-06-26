@@ -207,7 +207,7 @@ class User
         $me->syncTags($request);
 
         // upload
-        $me->uploadImage($request, 'avatar');
+        $me->uploadImage($request, 'file_avatar', 'avatar', 'avatars/');
 
         return $me;
     }

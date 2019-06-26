@@ -128,7 +128,7 @@ class Answer
         // relationships
 
         // upload
-        $me->uploadImage($request, 'img_src');
+        $me->uploadImage($request, 'file_img_src', 'img_src', 'answers/');
 
         return $me;
     }

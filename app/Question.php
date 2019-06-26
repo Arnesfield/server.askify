@@ -104,7 +104,7 @@ class Question
         $me->syncTags($request);
 
         // upload
-        $me->uploadImage($request, 'img_src');
+        $me->uploadImage($request, 'file_img_src', 'img_src', 'questions/');
 
         return $me;
     }
