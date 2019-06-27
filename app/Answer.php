@@ -6,13 +6,15 @@ use App\Utils\FileUploadable\FileUploadable;
 use App\Utils\FileUploadable\FileUploadableContract;
 use App\Utils\Voteable\Voteable;
 use App\Utils\Voteable\VoteableContract;
+use App\Utils\FormatWith\WithFormattable;
+use App\Utils\FormatWith\FormatWith as FW;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Answer
     extends CommonModel
-    implements FileUploadableContract, VoteableContract
+    implements WithFormattable, FileUploadableContract, VoteableContract
 {
     use FileUploadable, Voteable;
     use SoftDeletes;
@@ -88,7 +90,32 @@ class Answer
         return $this->hasMany('App\Transaction');
     }
 
+    public function transactionsViewable()
+    {
+        return $this->transactions();
+    }
+
     // override
+
+    // WithFormattable
+    public static function formatWith($with, $meta = [])
+    {
+    }
+
+    public static function formatWithCount($with, $meta = [])
+    {
+        $request = $meta['request'];
+        $uid = $request->get('authId');
+
+        $withs = [];
+        if ($uid !== null) {
+            $withs['transactions'] = function($q) use ($uid) {
+                $q->where('user_id', $uid);
+            };
+        }
+
+        return FW::format($with, $withs);
+    }
 
     // Makeable
     protected static function validateOnCreate($data) {

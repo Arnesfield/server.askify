@@ -12,7 +12,7 @@ class NotAnInstanceOfException extends Exception
         parent::__construct("$className should be an instance of $instanceOf.");
     }
 
-    public static function check($object, $instanceOf)
+    public static function check($object, $instanceOf, $return = false)
     {
         // $object should be an object
         $object = is_string($object) ? app($object) : $object;
@@ -24,8 +24,14 @@ class NotAnInstanceOfException extends Exception
         // loop on $ios
         foreach ($ios as $io) {
             if ( ! ($object instanceof $io) ) {
-                throw new static($object, $io);
+                if ($return) {
+                    return false;
+                } else {
+                    throw new static($object, $io);
+                }
             }
         }
+
+        return true;
     }
 }

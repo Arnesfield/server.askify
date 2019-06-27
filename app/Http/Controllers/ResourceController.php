@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Interfaces\Makeable;
 use App\Interfaces\Validateable;
+use App\Utils\FormatWith\WithFormattable;
 use App\Utils\Respondable\RespondableContract;
 use App\Exceptions\NotAnInstanceOfException;
 
@@ -23,31 +24,63 @@ abstract class ResourceController extends Controller
         ]);
     }
 
-    public function index(Request $request)
+    protected function doFormatWith(Request $request, &$with = [], &$withCount = [])
+    {
+        $meta = compact('request');
+        $with = $this->model::formatWith($with, $meta) ?? $with;
+        $withCount = $this->model::formatWithCount($withCount, $meta) ?? $with;
+    }
+
+    private function checkWithFormattable(Request $request, &$with = [], &$withCount = [])
+    {
+        $formattable = NotAnInstanceOfException::check(
+            $this->model,
+            WithFormattable::class,
+            true
+        );
+
+        if ($formattable) {
+            $this->doFormatWith($request, $with, $withCount);
+        }
+    }
+
+    protected function getMany(Request $request, $builderCb = null)
     {
         $with = $request->get('with', []);
         $withCount = $request->get('withCount', []);
         $where = $request->get('where', []);
 
-        $items = $this->model::with($with)
+        $this->checkWithFormattable($request, $with, $withCount);
+
+        $builder = $this->model::with($with)
             ->withCount($withCount)
             ->where($where)
-            ->latest()
-            ->get();
+            ->latest();
 
+        if (is_callable($builderCb)) {
+            $builderCb($builder);
+        }
+
+        $items = $builder->get();
         $items = $this->modelResource::collection($items);
         return jresponse($items);
     }
 
-    public function show(Request $request, $id)
+    protected function getOne(Request $request, $id, $builderCb = null)
     {
         $model = $this->model;
         $with = $request->get('with', []);
         $withCount = $request->get('withCount', []);
 
-        $item = $model::with($with)
-            ->withCount($withCount)
-            ->find($id);
+        $this->checkWithFormattable($request, $with, $withCount);
+
+        $builder = $model::with($with)->withCount($withCount);
+
+        if (is_callable($builderCb)) {
+            $builderCb($builder);
+        }
+
+        $item = $builder->find($id);
 
         if (!$item) {
             return $model::rmsg('not found', status($item));
@@ -55,6 +88,16 @@ abstract class ResourceController extends Controller
 
         $item = new $this->modelResource($item);
         return jresponse($item);
+    }
+
+    public function index(Request $request)
+    {
+        return $this->getMany($request);
+    }
+
+    public function show(Request $request, $id)
+    {
+        return $this->getOne($request, $id);
     }
 
     public function store(Request $request)
