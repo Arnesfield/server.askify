@@ -53,15 +53,16 @@ abstract class ResourceController extends Controller
         $this->checkWithFormattable($request, $with, $withCount);
 
         $builder = $this->model::with($with)
-            ->withCount($withCount)
-            ->where($where)
-            ->latest();
+            ->withCount($withCount);
 
         if (is_callable($builderCb)) {
             $builderCb($builder);
         }
 
-        $items = $builder->get();
+        $items = $builder->where($where)
+            ->latest()
+            ->get();
+
         $items = $this->modelResource::collection($items);
         return jresponse($items);
     }

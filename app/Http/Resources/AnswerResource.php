@@ -23,12 +23,12 @@ class AnswerResource extends JsonResource
         // FIXME: this is messy and shouldn't be here, but it works so...
         // check if viewable by user
         $aUser = user($request, false);
-        if ($aUser && isset($res['transactions_viewable_count'])) {
+        if ($aUser && isset($res['transactions_viewable'])) {
             $uid = $aUser->id;
             $viewable = $uid == $res['user_id'] ||
                 $res['privated_at'] === null ||
-                $res['transactions_viewable_count'] > 0;
-            
+                count($res['transactions_viewable']) > 0;
+
             $formatted['is_viewable'] = $viewable;
         }
 

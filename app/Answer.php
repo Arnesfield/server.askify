@@ -92,7 +92,7 @@ class Answer
 
     public function transactionsViewable()
     {
-        return $this->transactions();
+        return $this->transactions()->select('id');
     }
 
     // override
@@ -100,16 +100,18 @@ class Answer
     // WithFormattable
     public static function formatWith($with, $meta = [])
     {
+        return static::formatWithCount($with, $meta);
     }
 
     public static function formatWithCount($with, $meta = [])
     {
         $request = $meta['request'];
         $uid = $request->get('authId');
+        $prepend = $meta['prepend'] ?? '';
 
         $withs = [];
         if ($uid !== null) {
-            $withs['transactions'] = function($q) use ($uid) {
+            $withs["{$prepend}transactionsViewable"] = function($q) use ($uid) {
                 $q->where('user_id', $uid);
             };
         }

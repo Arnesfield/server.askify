@@ -15,6 +15,10 @@ class QuestionResource extends JsonResource
             $user = new UserResource($this->user);
             $formatted['user'] = $user->toArray($request);
         }
+        if ( isset($res['answers']) ) {
+            $answers = AnswerResource::collection($this->answers);
+            $formatted['answers'] = $answers->toArray($request);
+        }
         if ( isset($res['tags']) ) {
             $tags = TagResource::collection($this->tags);
             $formatted['tags'] = $tags->toArray($request);
