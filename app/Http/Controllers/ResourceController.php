@@ -60,7 +60,7 @@ abstract class ResourceController extends Controller
         }
 
         $items = $builder->where($where)
-            ->latest()
+            ->dateLatest()
             ->get();
 
         $items = $this->modelResource::collection($items);

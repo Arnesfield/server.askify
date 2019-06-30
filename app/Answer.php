@@ -22,7 +22,7 @@ class Answer
     protected $fillable = [
         'user_id', 'question_id',
         'content', 'img_src', 'price', 'currency',
-        'deleted_at', 'privated_at'
+        'deleted_at', 'privated_at', 'is_best_at',
     ];
 
     protected $appends = [
@@ -30,7 +30,7 @@ class Answer
     ];
 
     protected $dates = [
-        'deleted_at', 'privated_at',
+        'deleted_at', 'privated_at', 'is_best_at',
     ];
 
     protected $attributes = [
@@ -66,6 +66,13 @@ class Answer
     public function scopePublic($query)
     {
         return $query->whereNull('privated_at');
+    }
+
+    // override
+    public function scopeDateLatest($query)
+    {
+        $query->orderBy('is_best_at', 'DESC');
+        return parent::scopeDateLatest($query);
     }
 
     // relationships

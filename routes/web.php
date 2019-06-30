@@ -57,6 +57,9 @@ $router->group(['prefix' => 'answers'], function() use ($router) {
     $router->patch('{id}', 'Core\AnswerController@update');
     $router->delete('{id}', 'Core\AnswerController@destroy');
     $router->patch('{id}/restore', 'Core\AnswerController@restore');
+    
+    // set best answer
+    $router->patch('{id}/best', 'Core\AnswerController@setBest');
 
     // pay
     // do both

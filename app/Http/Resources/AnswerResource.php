@@ -36,8 +36,9 @@ class AnswerResource extends JsonResource
         humanizeDate($this, $res, [
             'deleted_at',
             'created_at',
-            'updated_at'
-        ]);
+            'updated_at',
+            'is_best_at'
+        ], true);
 
         return array_merge($res, $formatted);
     }

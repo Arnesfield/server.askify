@@ -27,6 +27,7 @@ class CreateAnswersTable extends Migration
 
             // dates
             $table->timestamp('privated_at')->nullable();
+            $table->timestamp('is_best_at')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

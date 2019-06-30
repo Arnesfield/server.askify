@@ -73,7 +73,7 @@ class Question
 
     public function answers()
     {
-        return $this->hasMany('App\Answer');
+        return $this->hasMany('App\Answer')->dateLatest();
     }
 
     public function tags()
