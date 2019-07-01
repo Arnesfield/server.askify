@@ -20,10 +20,19 @@ $factory->define(App\Question::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Answer::class, function (Faker\Generator $faker) {
-    return [
+    $isPayable = rand(0, 1) === 1;
+
+    $answer = [
         'content' => $faker->paragraph(12),
-        'price' => 1.00,
-        'currency' => 'USD',
-        'privated_at' => nowDt(),
     ];
+
+    if ($isPayable) {
+        $answer = array_merge($answer, [
+            'price' => 1.00,
+            'currency' => 'USD',
+            'privated_at' => nowDt(),
+        ]);
+    }
+
+    return $answer;
 });
