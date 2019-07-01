@@ -59,6 +59,16 @@ class Answer
 
     // methods
 
+    public function setBest($best = true)
+    {
+        $this->timestamps = false;
+        $this->is_best_at = $best ? nowDt() : null;
+        $res = $this->save();
+        $this->timestamps = true;
+
+        return $res;
+    }
+
     // mutators
 
     // scopes

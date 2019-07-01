@@ -60,6 +60,7 @@ $router->group(['prefix' => 'answers'], function() use ($router) {
     
     // set best answer
     $router->patch('{id}/best', 'Core\AnswerController@setBest');
+    $router->patch('{id}/unbest', 'Core\AnswerController@removeBest');
 
     // pay
     // do both

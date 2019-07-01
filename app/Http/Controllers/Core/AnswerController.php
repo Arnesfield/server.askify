@@ -14,7 +14,7 @@ class AnswerController extends ResourceController
     protected $model = Answer::class;
     protected $modelResource = AnswerResource::class;
 
-    public function setBest(Request $request, $id)
+    protected function makeBest(Request $request, $id, $best = true)
     {
         $with = $request->get('with', []);
         $answer = Answer::with($with)->find($id);
@@ -22,19 +22,42 @@ class AnswerController extends ResourceController
             return jresponse('Answer not found.', 404);
         }
 
-        // FIXME: make sure not to update timestamps!!
-        $answer->question->answers()->update(['is_best_at' => null]);
-        $res = $answer->update(['is_best_at' => nowDt()]);
+        // unbest all except curr answer
+        $answer->question
+            ->answers()
+            ->whereNotNull('is_best_at')
+            ->where('id', '!=', $answer->id)
+            ->get()
+            ->each(function($a) {
+                $a->setBest(false);
+            });
+
+        $res = $answer->setBest($best);
 
         if (!$res) {
-            return jresponse('Unable to set answer as "best answer."', 400);
+            return jresponse(
+                $best
+                    ? 'Unable to set "best answer" status.'
+                    : 'Unable to remove "best answer" status.',
+                400
+            );
         }
 
-        $msg = 'Answer set as "best answer."';
+        $msg = $best ? 'Set as "best answer."' : 'Removed "best answer."';
         $answer = new AnswerResource($answer);
         $answer = $answer->toArray($request);
 
         return jresponse(compact('msg', 'answer'));
+    }
+
+    public function setBest(Request $request, $id)
+    {
+        return $this->makeBest($request, $id);
+    }
+
+    public function removeBest(Request $request, $id)
+    {
+        return $this->makeBest($request, $id, false);
     }
 
     public function showAnswers(Request $request, $id, $uid)

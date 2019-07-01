@@ -23,13 +23,21 @@ class AnswerResource extends JsonResource
         // FIXME: this is messy and shouldn't be here, but it works so...
         // check if viewable by user
         $aUser = user($request, false);
-        if ($aUser && isset($res['transactions_viewable'])) {
+        if ($aUser) {
             $uid = $aUser->id;
-            $viewable = $uid == $res['user_id'] ||
-                $res['privated_at'] === null ||
-                count($res['transactions_viewable']) > 0;
 
-            $formatted['is_viewable'] = $viewable;
+            // did i vote for this answer?
+            $vote = $this->votes()->where('user_id', $uid)->first();
+            $formatted['vote'] = $vote;
+
+            // viewable
+            if (isset($res['transactions_viewable'])) {
+                $viewable = $uid == $res['user_id'] ||
+                    $res['privated_at'] === null ||
+                    count($res['transactions_viewable']) > 0;
+
+                $formatted['is_viewable'] = $viewable;
+            }
         }
 
         // dates
