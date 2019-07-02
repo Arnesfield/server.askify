@@ -8,6 +8,7 @@ use App\Utils\Taggable\Taggable;
 use App\Utils\Taggable\TaggableContract;
 use App\Utils\Voteable\Voteable;
 use App\Utils\Voteable\VoteableContract;
+use App\Utils\FormatWith\WithFormattable;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Question
     extends CommonModel
     implements
+        WithFormattable,
         TaggableContract,
         FileUploadableContract,
         VoteableContract
@@ -87,6 +89,20 @@ class Question
     }
 
     // override
+
+    // WithFormattable
+    public static function formatWith($with, $meta = [])
+    {
+        $extra = ['prepend' => 'answers.'];
+        $meta = array_merge($meta, $extra);
+
+        return Answer::formatWith($with, $meta);
+    }
+
+    public static function formatWithCount($with, $meta = [])
+    {
+        return $with;
+    }
 
     // Makeable
     public static function makeMe(Request $request, $me = null, $meta = [])

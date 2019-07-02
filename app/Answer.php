@@ -107,11 +107,16 @@ class Answer
         return $this->hasMany('App\Transaction');
     }
 
+    public function transactionsApproved()
+    {
+        return $this->transactions()
+            ->whereNotNull('approved_at');
+    }
+
     public function transactionsViewable()
     {
-        return $this->transactions()->select(
-            ['id', 'user_id', 'answer_id']
-        );
+        return $this->transactionsApproved()
+            ->select(['id', 'user_id', 'answer_id']);
     }
 
     // override
