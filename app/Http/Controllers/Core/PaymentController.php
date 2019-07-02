@@ -18,6 +18,11 @@ class PaymentController extends Controller
     {
         $answer = Answer::find($id);
         $res = PayPalApi::pay($request, user($request), $answer);
+
+        if ($payment = $res['payment']) {
+            return redirect($payment->getApprovalLink());
+        }
+
         return !$res['error']
             ? jresponse($res)
             : jresponse($res, 400);
@@ -46,14 +51,31 @@ class PaymentController extends Controller
         $execRes = PayPalApi::execute($request);
         $res = $execRes['result'] && $transaction->approveMe();
 
+        $msg = $res ? 'Transaction successful.' : 'Unable to approve transaction.';
+
+        // goto client
+        return $this->gotoClient($msg);
+
+        // disregard
         return $res
-            ? jresponse('Transaction successful.')
-            : jresponse('Unable to approve transaction.', 400);
+            ? jresponse($msg)
+            : jresponse($msg, 400);
     }
 
     public function cancel(Request $request)
     {
         // $token = $payment->token;
-        return jresponse('Transaction cancelled.');
+        $msg = 'Transaction cancelled.';
+        return $this->gotoClient($msg);
+
+        // disregard
+        return jresponse($msg);
+    }
+
+    protected function gotoClient($msg = '') {
+        $params = $msg ? "?msg=$msg" : '';
+        $url = env('APP_CLIENT_URL') . $params;
+
+        return redirect($url);
     }
 }

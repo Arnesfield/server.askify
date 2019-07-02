@@ -109,7 +109,9 @@ class Answer
 
     public function transactionsViewable()
     {
-        return $this->transactions()->select('id');
+        return $this->transactions()->select(
+            ['id', 'user_id', 'answer_id']
+        );
     }
 
     // override

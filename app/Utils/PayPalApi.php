@@ -111,11 +111,16 @@ class PayPalApi
             $error = $ex->getData();
         }
 
-        // format for compact lol
+        // format for return lol
         $transaction = $appTrxn;
-        $payment = $payment->toArray();
+        // $payment = $payment->toArray();
 
-        return compact('error', 'payment', 'transaction');
+        return [
+            'error' => $error,
+            'payment' => $payment,
+            'payment_array' => $payment->toArray(),
+            'transaction' => $transaction
+        ];
     }
 
     public static function execute(Request $request)
