@@ -27,7 +27,12 @@ class AnswerResource extends JsonResource
             $uid = $aUser->id;
 
             // did i vote for this answer?
-            $vote = $this->votes()->where('user_id', $uid)->first();
+            // include deleted oness ;)
+            $vote = $this->votes()
+                ->withTrashed()
+                ->where('user_id', $uid)
+                ->first();
+
             $formatted['vote'] = $vote;
 
             // viewable
