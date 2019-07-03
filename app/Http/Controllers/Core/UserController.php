@@ -26,7 +26,8 @@ class UserController extends ResourceController
         }
 
         $with = $request->get('with', []);
-        $builder = Question::with($with);
+        $withCount = $request->get('withCount', []);
+        $builder = Question::with($with)->withCount($withCount);
 
         $qf = new QuestionFeed($user);
         $res = $qf->get($request, $builder);
