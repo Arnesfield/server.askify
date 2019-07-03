@@ -15,7 +15,7 @@ class UserController extends ResourceController
     protected $model = User::class;
     protected $modelResource = UserResource::class;
 
-    public function questionFeed(Request $request, $id)
+    public function questionsFeed(Request $request, $id)
     {
         // user should be an expert?
         $roles = $request->get('roles', 4);
@@ -29,7 +29,7 @@ class UserController extends ResourceController
         $builder = Question::with($with);
 
         $qf = new QuestionFeed($user);
-        $res = $qf->get($builder);
+        $res = $qf->get($request, $builder);
 
         return jresponse($res);
     }

@@ -5,6 +5,9 @@ namespace App\Core;
 use App\User;
 use App\Tag;
 use App\Question;
+use App\Http\Resources\QuestionResource;
+
+use Illuminate\Http\Request;
 
 class QuestionFeed
 {
@@ -23,7 +26,7 @@ class QuestionFeed
 
     //!! im just so sad :((((
     // it works anyway (i think)
-    public function get($builder = null)
+    public function get(Request $request, $builder = null)
     {
         $tagIds = $this->getTags();
         $map = $this->getTagsMap();
@@ -56,8 +59,10 @@ class QuestionFeed
                 return $total;
             });
 
+        // use resource
+        $questions = QuestionResource::collection($questions);
+        $questions = $questions->toArray($request);
 
-        $questions = $questions->toArray();
         usort($questions, function($a, $b) {
             return $b['priority'] - $a['priority'];
         });

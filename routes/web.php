@@ -31,9 +31,9 @@ $router->group(['prefix' => 'users'], function() use ($router) {
     $router->patch('{id}', 'Core\UserController@update');
     $router->delete('{id}', 'Core\UserController@destroy');
     $router->patch('{id}/restore', 'Core\UserController@restore');
-    
+
     // algo
-    $router->get('{id}/question/feed', 'Core\UserController@questionFeed');
+    $router->get('{id}/questions/feed', 'Core\UserController@questionsFeed');
 });
 
 // questions
