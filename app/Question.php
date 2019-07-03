@@ -78,6 +78,11 @@ class Question
         return $this->hasMany('App\Answer')->dateLatest();
     }
 
+    public function bestAnswers()
+    {
+        return $this->answers()->isBest();
+    }
+
     public function tags()
     {
         return $this->morphToMany('App\Tag', 'taggable');

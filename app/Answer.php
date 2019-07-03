@@ -78,6 +78,11 @@ class Answer
         return $query->whereNull('privated_at');
     }
 
+    public function scopeIsBest($query)
+    {
+        return $query->whereNotNull('is_best_at');
+    }
+
     // override
     public function scopeDateLatest($query)
     {

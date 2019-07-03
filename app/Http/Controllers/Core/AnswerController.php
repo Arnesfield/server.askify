@@ -25,7 +25,7 @@ class AnswerController extends ResourceController
         // unbest all except curr answer
         $answer->question
             ->answers()
-            ->whereNotNull('is_best_at')
+            ->isBest()
             ->where('id', '!=', $answer->id)
             ->get()
             ->each(function($a) {
