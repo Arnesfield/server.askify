@@ -72,16 +72,17 @@ abstract class ResourceController extends Controller
         $model = $this->model;
         $with = $request->get('with', []);
         $withCount = $request->get('withCount', []);
+        $where = $request->get('where', []);
 
         $this->checkWithFormattable($request, $with, $withCount);
 
         $builder = $model::with($with)->withCount($withCount);
-
+        
         if (is_callable($builderCb)) {
             $builderCb($builder);
         }
 
-        $item = $builder->find($id);
+        $item = $builder->where($where)->find($id);
 
         if (!$item) {
             return $model::rmsg('not found', status($item));
