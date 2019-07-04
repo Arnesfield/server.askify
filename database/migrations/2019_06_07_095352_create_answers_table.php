@@ -22,7 +22,7 @@ class CreateAnswersTable extends Migration
             $table->string('img_src')->nullable();
 
             // paid
-            $table->integer('price')->default(0);
+            $table->float('price', 3, 2)->default(0);
             $table->string('currency')->default('USD');
 
             // dates
