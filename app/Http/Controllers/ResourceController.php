@@ -109,9 +109,12 @@ abstract class ResourceController extends Controller
         $this->validate($request, $R['rules'], $R['errors']);
 
         $item = $model::makeMe($request);
+        // show id toooo
+        $meta = $item ? ['id' => $item->id] : null;
+
         return $item
-            ? $model::rmsg('create success')
-            : $model::rmsg('create fail', 422);
+            ? $model::rmsg('create success', 200, $meta)
+            : $model::rmsg('create fail', 422, $meta);
     }
 
     public function update(Request $request, $id)
@@ -125,8 +128,10 @@ abstract class ResourceController extends Controller
         $R = $model::getValidationRules($id);
         $this->validate($request, $R['rules'], $R['errors']);
 
-        $model::makeMe($request, $item);
-        return $model::rmsg('update success');
+        $item = $model::makeMe($request, $item);
+        $meta = $item ? ['id' => $item->id] : null;
+
+        return $model::rmsg('update success', 200, $meta);
     }
 
     public function destroy(Request $request, $id)
