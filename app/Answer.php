@@ -41,6 +41,8 @@ class Answer
         'price' => 0,
         'currency' => 'USD',
 		'deleted_at' => null,
+		'privated_at' => null,
+		'is_best_at' => null,
     ];
 
     protected static $responseMessages = [
@@ -167,10 +169,18 @@ class Answer
     public static function makeMe(Request $request, $me = null, $meta = [])
     {
         $data = $request->all();
+
+        // is required to maintain privated_at
         if ($request->get('make_private')) {
-            $data['privated_at'] = nowDt();
+            // if $me exists, then use the date of thatt if it existss
+            $d = $me ? $me->privated_at : null;
+            $d = $d ?: nowDt();
+
+            $data['privated_at'] = $d;
+        } else {
+            $data['privated_at'] = null;
         }
-        
+
         if ($me === null) {
             $user = user($request);
             static::validateOnCreate($data);
