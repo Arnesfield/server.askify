@@ -13,9 +13,7 @@ trait Taggable
         // set defaults
         $tags = $request instanceof Request
             ? requestGetArray($request, $key)
-            : is_array($request)
-                ? $request
-                : false;
+            : (is_array($request) ? $request : false);
 
         if (is_bool($key)) {
             $return = $key;
