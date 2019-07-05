@@ -135,6 +135,9 @@ class Question
         'title.required' => 'Title is required.',
         'content.required' => 'Content or description is required.',
         // 'img_src.image' => 'Uploaded item should be an image.',
+        'urgent_at.required' => 'Requires date urgency.',
+        'urgent_at.date_format' => 'Invalid date format for date urgency.',
+        'urgent_at.after_or_equal' => 'Date should not be from the past.',
     ];
 
     // Validateable
@@ -147,6 +150,7 @@ class Question
                 'title' => 'sometimes|required',
                 'content' => 'sometimes|required',
                 // 'img_src' => 'sometimes|image',
+                'urgent_at' => 'sometimes|required|date_format:"Y-m-d H:i:s"|after_or_equal:now',
             ],
             'errors' => static::$validationErrors
         ];
