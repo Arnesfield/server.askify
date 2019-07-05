@@ -27,7 +27,7 @@ class Question
     protected $fillable = [
         'user_id',
         'title', 'content', 'img_src',
-        'deleted_at',
+        'deleted_at', 'urgent_at',
     ];
 
     protected $appends = [
@@ -35,7 +35,7 @@ class Question
     ];
 
     protected $dates = [
-        'deleted_at',
+        'deleted_at', 'urgent_at',
     ];
 
     protected $attributes = [
@@ -44,6 +44,7 @@ class Question
         'content' => '',
         'img_src' => null,
 		'deleted_at' => null,
+		'urgent_at' => null,
     ];
 
     protected static $responseMessages = [

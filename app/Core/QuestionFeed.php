@@ -9,6 +9,27 @@ use App\Http\Resources\QuestionResource;
 
 use Illuminate\Http\Request;
 
+/**
+ * 
+ * QuestionFeed class
+ * 
+ * this class specifically returns filtered questions
+ * based on the $user's:
+ * - preferences (tags)
+ * - history of answers (tags of questions)
+ * 
+ * once these tags are collected,
+ * a map is created with its id and the number of occurrences of the tags.
+ * depending on the question being checked,
+ * its tags are compared to the map created
+ * and each tag of the question that exists in the map
+ * will have a score that is equivalent to the number of occurrences.
+ * The total of the said score of a tag and all the other tags of the question
+ * become the $priority value of the question.
+ * Questions filtered by this process are then sorted by their urgency and priority.
+ * The greater the $priority, the more likely it is to be suggested first.
+ * 
+ */
 class QuestionFeed
 {
 
@@ -18,24 +39,12 @@ class QuestionFeed
         $this->user = $user;
     }
 
-    private function showTags($ids)
-    {
-        $tags = Tag::whereIn('id', $ids)->pluck('name', 'id');
-        dd($tags->toArray());
-    }
-
-    //!! im just so sad :((((
-    // it works anyway (i think)
+    // the only thing you'll need ;)
     public function get(Request $request, $builder = null)
     {
         $tagIds = $this->getTags();
         $map = $this->getTagsMap();
         $builder = !$builder ? Question::with([]) : $builder;
-
-        // dd($tagIds);
-        // dd($map);
-
-        // $this->showTags($tagIds);
 
         $cb = function($q) use ($tagIds) {
             $q->whereIn('tags.id', $tagIds);
@@ -46,6 +55,7 @@ class QuestionFeed
             ->whereHas('tags', $cb)
             // ->withCount(['tags' => $cb])
             // ->orderBy('tags_count', 'DESC')
+            ->orderBy('urgent_at', 'DESC')
             ->get()
             ->sortBy(function($e) use ($map) {
                 // a question has tags
@@ -63,12 +73,11 @@ class QuestionFeed
         $questions = QuestionResource::collection($questions);
         $questions = $questions->toArray($request);
 
+        // finally sort according to priority
         usort($questions, function($a, $b) {
             return $b['priority'] - $a['priority'];
         });
-        // return $questions->pluck('priority', 'id');
-        // return $questions->pluck('priority');
-        // $questions = json_encode($questions);
+
         return $questions;
     }
 

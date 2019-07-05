@@ -21,6 +21,9 @@ class CreateQuestionsTable extends Migration
             $table->text('content');
             $table->string('img_src')->nullable();
 
+            // dates
+            $table->timestamp('urgent_at')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
 
