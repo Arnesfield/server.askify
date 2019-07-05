@@ -115,6 +115,12 @@ class Question
     {
         $data = $request->all();
 
+        // date
+        $urgentAt = $request->get('urgent_at', false);
+        if ($urgentAt !== false && !$urgentAt) {
+            $data['urgent_at'] = null;
+        }
+
         if ($me === null) {
             $me = new static($data);
             user($request)->questions()->save($me);
@@ -150,7 +156,7 @@ class Question
                 'title' => 'sometimes|required',
                 'content' => 'sometimes|required',
                 // 'img_src' => 'sometimes|image',
-                'urgent_at' => 'sometimes|required|date_format:"Y-m-d H:i:s"|after_or_equal:now',
+                'urgent_at' => 'sometimes|nullable|date_format:"Y-m-d H:i:s"|after_or_equal:now',
             ],
             'errors' => static::$validationErrors
         ];
