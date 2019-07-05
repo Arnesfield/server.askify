@@ -31,7 +31,12 @@ trait Taggable
 
         foreach ($tags as $tag) {
             // if not an id
-            if ( !(is_numeric($tag) || is_string($tag)) ) {
+            if ( !(is_numeric($tag)) ) {
+                // convrt tag to assoc array if string
+                if (is_string($tag)) {
+                    $tag = ['name' => $tag];
+                }
+
                 // find Tag, else create one
                 $mTag = Tag::where('name', $tag['name'])->first();
                 if (!$mTag) {
