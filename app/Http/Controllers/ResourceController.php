@@ -128,10 +128,8 @@ abstract class ResourceController extends Controller
         $R = $model::getValidationRules($id);
         $this->validate($request, $R['rules'], $R['errors']);
 
-        $item = $model::makeMe($request, $item);
-        $meta = $item ? ['id' => $item->id] : null;
-
-        return $model::rmsg('update success', 200, $meta);
+        $model::makeMe($request, $item);
+        return $model::rmsg('update success', 200, compact('id'));
     }
 
     public function destroy(Request $request, $id)
@@ -144,7 +142,7 @@ abstract class ResourceController extends Controller
             return $model::rmsg('delete fail', 422);
         }
 
-        return $model::rmsg('delete success');
+        return $model::rmsg('delete success', 200, compact('id'));
     }
 
     public function restore(Request $request, $id)
@@ -157,6 +155,6 @@ abstract class ResourceController extends Controller
             return $model::rmsg('restore fail', 422);
         }
 
-        return $model::rmsg('restore success');
+        return $model::rmsg('restore success', 200, compact('id'));
     }
 }
