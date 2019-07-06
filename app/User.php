@@ -191,6 +191,13 @@ class User
     {
         $data = $request->all();
 
+        if ($me && $request->get('old_password')) {
+            $passcheck = $me->checkPassword($data['old_password']);
+            if (!$passcheck) {
+                error('Old password is incorrect.', 401);
+            }
+        }
+
         if ($me === null) {
             $data['email_verification_code'] = '';
             $me = static::create($data);
