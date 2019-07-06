@@ -1,12 +1,8 @@
 @extends('layouts.email')
 
 @section('title', 'Reset Password')
-@section('content', 'It looks like you forgot your password. To proceed to retrieving your account, please click on the link provided below.')
+@section('content', 'It looks like you forgot your password. To proceed to retrieving your account, here is your new password provided below. You may change it once you have logged in.')
 
 @section('append')
-<a
-  {{ $attrDate }}
-  style="color: {{ $config['color_accent'] }}"
-  href="{{ url('auth/reset?c=' . $code) }}"
->Reset your password</a>
+New password: <u><strong>{{ $code }}</strong></u>
 @endsection

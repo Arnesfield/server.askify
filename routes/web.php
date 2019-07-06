@@ -21,6 +21,7 @@ $router->group(['prefix' => 'auth'], function() use ($router) {
     $router->post('register', 'Auth\RegisterController@index');
     $router->get('verify', 'Auth\VerifyEmailController@index');
     $router->post('resend', 'Auth\ResendVerificationCodeController@index');
+    $router->post('reset', 'Auth\ResetPasswordController@index');
 });
 
 // users

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Mail\PasswordReset;
 use App\Mail\EmailVerification;
 use App\Utils\FileUploadable\FileUploadable;
 use App\Utils\FileUploadable\FileUploadableContract;
@@ -34,13 +35,12 @@ class User
 
     protected $fillable = [
         'fname', 'mname', 'lname', 'email', 'avatar', 'password',
-        'reset_password', 'email_verification_code',
+        'email_verification_code',
         'email_verified_at', 'deleted_at',
     ];
 
     protected $hidden = [
-        'password', 'reset_password',
-        'email_verification_code',
+        'password', 'email_verification_code',
     ];
 
     protected $dates = [
@@ -112,6 +112,14 @@ class User
     public function sendEmailVerificationCode()
     {
         $email = new EmailVerification($this);
+        Mail::to($this)->send($email);
+
+        return count(Mail::failures()) === 0;
+    }
+
+    public function sendResetPasswordCode($code)
+    {
+        $email = new PasswordReset($this, $code);
         Mail::to($this)->send($email);
 
         return count(Mail::failures()) === 0;
