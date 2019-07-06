@@ -34,12 +34,13 @@ class User
 
     protected $fillable = [
         'fname', 'mname', 'lname', 'email', 'avatar', 'password',
-        'email_verification_code',
+        'reset_password', 'email_verification_code',
         'email_verified_at', 'deleted_at',
     ];
 
     protected $hidden = [
-        'password',
+        'password', 'reset_password',
+        'email_verification_code',
     ];
 
     protected $dates = [

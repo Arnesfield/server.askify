@@ -112,6 +112,10 @@ if (env('APP_ENV') !== 'production') {
             $user = \App\User::find(1);
             return new \App\Mail\EmailVerification($user);
         });
+        $router->get('reset', function () use ($router) {
+            $user = \App\User::find(1);
+            return new \App\Mail\PasswordReset($user);
+        });
     });
 
     $router->get('mail/send', function () use ($router) {

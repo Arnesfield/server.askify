@@ -4,7 +4,7 @@ namespace App\Mail;
 
 use App\User;
 
-class EmailVerification extends BaseMail
+class PasswordReset extends BaseMail
 {
 
     /**
@@ -14,7 +14,7 @@ class EmailVerification extends BaseMail
      */
     public function __construct(User $user, $code = null)
     {
-        $code = $code ?: $user->email_verification_code;
+        $code = $code ?: $user->reset_password;
         parent::__construct($user, $code);
     }
 
@@ -26,7 +26,7 @@ class EmailVerification extends BaseMail
     public function build()
     {
         return $this
-            ->subject('Email Verification')
-            ->view('emails.verification');
+            ->subject('Reset Password')
+            ->view('emails.passwordReset');
     }
 }
