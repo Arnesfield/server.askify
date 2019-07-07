@@ -78,7 +78,8 @@ class User
     public function fullname($withMiddle = true)
     {
         $name = $this->fname . ' ';
-        $name .= $withMiddle && $this->mname ? $this->mname . ' ' : '';
+        $mname = $this->mname;
+        $name .= $withMiddle && $mname && $mname !== 'null' ? $mname . ' ' : '';
         $name .= $this->lname;
 
         return $name;
@@ -129,7 +130,7 @@ class User
 
     public function getFullnameAttribute()
     {
-        return $this->fullName();
+        return $this->fullname();
     }
 
     // mutators
